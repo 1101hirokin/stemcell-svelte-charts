@@ -252,6 +252,7 @@
   class="sc-barchart"
   data-orientation={orientation}
   data-stacking={stacking}
+  data-scrolls={layout.scrolls ? 'true' : undefined}
   role="group"
   aria-labelledby={labelId}
   aria-describedby={description ? descriptionId : undefined}

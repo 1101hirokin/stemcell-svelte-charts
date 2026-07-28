@@ -150,12 +150,21 @@
   transform: translateX(-100%);
 }
 
-/* 送れる領域。溢れたときだけ焦点を受ける(SC 2.1.1。CodeBlock と同じ形) */
+/* 送れる領域。溢れたときだけ焦点を受ける(SC 2.1.1。CodeBlock と同じ形)。
+   送るかどうかは計算層が決めた結果に従う: overflow: auto を常時にすると、場所の幅を整数で測る
+   ことによる 1px 未満のはみ出しでも送り手が出る(実測。溢れていないのにスクロールバーが出た)。
+   量の軸の側は送らない(絵は場所に収まっている) */
 .sc-barchart-scroll {
   flex: 1;
   min-inline-size: 0;
   min-block-size: 0;
-  overflow: auto;
+  overflow: hidden;
+}
+.sc-barchart[data-orientation='vertical'][data-scrolls='true'] .sc-barchart-scroll {
+  overflow-x: auto;
+}
+.sc-barchart[data-orientation='horizontal'][data-scrolls='true'] .sc-barchart-scroll {
+  overflow-y: auto;
 }
 .sc-barchart-scroll:focus-visible {
   outline: var(--focus-ring-width) var(--focus-ring-style) var(--color-app-system);
