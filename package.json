@@ -1,0 +1,51 @@
+{
+  "name": "@stemcell/svelte-charts",
+  "version": "0.0.0-alpha.0",
+  "type": "module",
+  "description": "Stemcell の図の Svelte 実装。決め事は @stemcell/charts-core が持ち、ここは SVG で描く(component-prompts の charts/*.md に適合する)。",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "svelte": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "!dist/**/*.test.*"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "package": "svelte-package -i src/lib -o dist",
+    "test": "vitest run",
+    "playground": "vite --config vite.playground.config.ts",
+    "prepublishOnly": "bun run package"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0",
+    "@stemcell/svelte": ">=0.0.0-alpha.20"
+  },
+  "dependencies": {
+    "@stemcell/charts-core": "0.0.0-alpha.2"
+  },
+  "devDependencies": {
+    "@stemcell/svelte": "0.0.0-alpha.20",
+    "@stemcell/tokens": "0.0.0-alpha.13",
+    "@sveltejs/package": "^2.5.8",
+    "@sveltejs/vite-plugin-svelte": "^4.0.0",
+    "@testing-library/svelte": "^5.2.0",
+    "@types/node": "^22",
+    "jsdom": "^25.0.0",
+    "playwright-core": "^1.49",
+    "svelte": "^5.0.0",
+    "svelte-check": "^4.0.0",
+    "typescript": "^5.6.0",
+    "vite": "^5.4.0",
+    "vitest": "^2.1.0"
+  }
+}

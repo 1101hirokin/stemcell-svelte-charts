@@ -1,0 +1,45 @@
+/* playground の飾り。部品の一部ではない(実物を見るための枠と下敷き)。 */
+body {
+  margin: 0;
+  background: var(--color-app-background);
+  color: var(--color-app-foreground);
+  font-family: var(--typography-body-md-font-family);
+}
+main {
+  max-inline-size: 60rem;
+  margin: 0 auto;
+  padding: var(--spacing-inset-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-stack-lg);
+}
+section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-stack-sm);
+  min-inline-size: 0;
+}
+h1 {
+  font-family: var(--typography-title-lg-font-family);
+  font-size: var(--typography-title-lg-font-size);
+  font-weight: var(--typography-title-lg-font-weight);
+  margin: 0;
+}
+h2 {
+  font-family: var(--typography-label-md-font-family);
+  font-size: var(--typography-label-md-font-size);
+  color: var(--color-app-fg-muted);
+  margin: 0;
+}
+.pg-box {
+  block-size: 16rem;
+}
+.pg-narrow {
+  inline-size: 18rem;
+}
+.pg-row {
+  display: flex;
+  gap: var(--spacing-gap-lg);
+  align-items: start;
+  flex-wrap: wrap;
+}

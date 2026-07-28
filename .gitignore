@@ -1,0 +1,6 @@
+node_modules
+dist
+playground/dist
+.svelte-kit
+.env.local
+*.tsbuildinfo
