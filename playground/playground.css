@@ -14,7 +14,8 @@ body {
 .pg-controls {
   position: sticky;
   inset-block-start: 0;
-  z-index: 1;
+  /* 層のスケールから引く(layering.md §3。生の数を書かない)。ページの上に貼り付く帯は navigation の層 */
+  z-index: var(--layer-navigation-z);
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-gap-md);
