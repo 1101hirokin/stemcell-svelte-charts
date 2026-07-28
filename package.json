@@ -31,7 +31,7 @@
     "@stemcell/svelte": ">=0.0.0-alpha.20"
   },
   "dependencies": {
-    "@stemcell/charts-core": "0.0.0-alpha.2"
+    "@stemcell/charts-core": "0.0.0-alpha.3"
   },
   "devDependencies": {
     "@stemcell/svelte": "0.0.0-alpha.20",
