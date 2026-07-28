@@ -42,8 +42,9 @@
 
   <section>
     <h2>並置(既定)</h2>
-    <div class="pg-box">
+    <div>
       <BarChart
+        ratio="16:9"
         data={monthly}
         encoding={{ x: '月', y: '売上', color: '区分' }}
         label="月別の売上"
@@ -62,8 +63,9 @@
   <section>
     <h2>積み上げ / 100% 積み上げ</h2>
     <div class="pg-row">
-      <div class="pg-box" style="flex: 1; min-inline-size: 16rem">
+      <div style="flex: 1; min-inline-size: 16rem">
         <BarChart
+          ratio="16:9"
           data={monthly}
           encoding={{ x: '月', y: '売上', color: '区分' }}
           stacking="stacked"
@@ -73,8 +75,9 @@
           locale="ja-JP"
         />
       </div>
-      <div class="pg-box" style="flex: 1; min-inline-size: 16rem">
+      <div style="flex: 1; min-inline-size: 16rem">
         <BarChart
+          ratio="16:9"
           data={monthly}
           encoding={{ x: '月', y: '売上', color: '区分' }}
           stacking="normalized"
@@ -89,8 +92,9 @@
 
   <section>
     <h2>負の値(基線が中に来る)</h2>
-    <div class="pg-box">
+    <div>
       <BarChart
+        ratio="16:9"
         data={change}
         encoding={{ x: '部門', y: '増減' }}
         label="前年比の増減"
@@ -103,8 +107,9 @@
 
   <section>
     <h2>横棒(長い名前は切り詰める)</h2>
-    <div class="pg-box">
+    <div>
       <BarChart
+        ratio="16:9"
         data={long}
         encoding={{ y: '名前', x: '数' }}
         orientation="horizontal"
@@ -117,22 +122,23 @@
 
   <section>
     <h2>極小の値と 0</h2>
-    <div class="pg-box">
-      <BarChart data={tiny} encoding={{ x: '種別', y: '件数' }} label="件数" tableLabel="表で見る" locale="ja-JP" />
+    <div>
+      <BarChart ratio="16:9" data={tiny} encoding={{ x: '種別', y: '件数' }} label="件数" tableLabel="表で見る" locale="ja-JP" />
     </div>
   </section>
 
   <section>
     <h2>狭いところに多い(下限で並べて横へ送る)</h2>
-    <div class="pg-box pg-narrow">
-      <BarChart data={many} encoding={{ x: '日', y: '件数' }} label="日別の件数" tableLabel="表で見る" locale="ja-JP" />
+    <div class="pg-narrow">
+      <BarChart ratio="4:3" data={many} encoding={{ x: '日', y: '件数' }} label="日別の件数" tableLabel="表で見る" locale="ja-JP" />
     </div>
   </section>
 
   <section>
     <h2>データが無い</h2>
-    <div class="pg-box">
+    <div>
       <BarChart
+        ratio="16:9"
         data={[]}
         encoding={{ x: '日', y: '件数' }}
         label="日別の件数"

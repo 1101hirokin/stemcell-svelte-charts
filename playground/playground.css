@@ -31,9 +31,6 @@ h2 {
   color: var(--color-app-fg-muted);
   margin: 0;
 }
-.pg-box {
-  block-size: 16rem;
-}
 .pg-narrow {
   inline-size: 18rem;
 }

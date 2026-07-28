@@ -7,6 +7,10 @@
   gap: var(--spacing-stack-sm);
   color: var(--color-app-foreground);
   min-inline-size: 0;
+  /* 置き場所に高さがあれば、絵がそれを埋める(高さは置かれた場所に従う。dataviz §4-2)。
+     場所の高さが auto なら 100% も auto に解けるので、比(ratio)か成り行きの高さになる。 */
+  block-size: 100%;
+  min-block-size: 0;
 }
 
 /* 図の名前。見出しの意味は持たない(画面の階層はアプリのもの) */
@@ -78,13 +82,16 @@
   line-height: var(--typography-body-sm-line-height);
 }
 
-/* 場所。高さは置かれた場所に従い、比を渡したときだけ形が決まる(第4条の逃げ道) */
+/* 場所。高さは置かれた場所に従い、比を渡したときだけ形が決まる(第4条の逃げ道)。
+   余った高さは絵が取るが、絵は縮まない(flex-shrink: 0)。表を開いた拍子に絵の形が変わると、
+   同じデータの絵が操作のたびに別物になる(裁定 2026-07-29。開いたぶんは下へ伸びる) */
 .sc-barchart-frame {
   position: relative;
   display: flex;
+  flex: 1 0 auto;
   gap: var(--spacing-inline-sm);
   min-inline-size: 0;
-  min-block-size: 8rem;
+  min-block-size: 6rem;
   aspect-ratio: var(--sc-barchart-ratio, auto);
 }
 .sc-barchart[data-orientation='horizontal'] .sc-barchart-frame {
@@ -270,6 +277,9 @@
 
 .sc-barchart-table {
   margin-block-start: var(--spacing-stack-sm);
+  /* 表は開いたぶんだけ下へ伸びる(絵を縮めない)。置き場所に固定の高さを与えると、
+     伸びたぶんはその外へ出る: 図を置く場所は比(ratio)か成り行きの高さにする(README) */
+  flex: 0 0 auto;
 }
 
 /* 初回の描き込み。速さと曲線は motion の規範に従い、細かい制御は持たない */
