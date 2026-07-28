@@ -47,6 +47,8 @@
 
   <div class="pg-controls">
     <Cluster gap="md" align="center">
+      <!-- 欄は場所いっぱいに広がるので、切り替えの帯では幅を与える(Box の逃げ道) -->
+      <Box style="inline-size: 10rem">
       <Select
         value={orientation}
         options={[
@@ -57,6 +59,8 @@
         size="sm"
         label={orientationLabel}
       />
+      </Box>
+      <Box style="inline-size: 12rem">
       <Select
         value={stacking}
         options={[
@@ -68,6 +72,7 @@
         size="sm"
         label={stackingLabel}
       />
+      </Box>
       <Checkbox checked={valueLabels} onchange={(v) => (valueLabels = v)} label={valueLabelsLabel} />
       <Checkbox checked={animate} onchange={(v) => (animate = v)} label={animateLabel} />
       <Button variant="outlined" size="sm" onclick={() => (take += 1)}>描き直す</Button>
