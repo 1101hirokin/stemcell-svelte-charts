@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@stemcell/svelte": "0.0.0-alpha.20",
-    "@stemcell/tokens": "0.0.0-alpha.14",
+    "@stemcell/tokens": "0.0.0-alpha.15",
     "@sveltejs/package": "^2.5.8",
     "@sveltejs/vite-plugin-svelte": "^4.0.0",
     "@testing-library/svelte": "^5.2.0",
