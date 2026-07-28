@@ -34,8 +34,8 @@
     "@stemcell/charts-core": "0.0.0-alpha.3"
   },
   "devDependencies": {
-    "@stemcell/svelte": "0.0.0-alpha.20",
-    "@stemcell/tokens": "0.0.0-alpha.15",
+    "@stemcell/svelte": "0.0.0-alpha.21",
+    "@stemcell/tokens": "0.0.0-alpha.16",
     "@sveltejs/package": "^2.5.8",
     "@sveltejs/vite-plugin-svelte": "^4.0.0",
     "@testing-library/svelte": "^5.2.0",

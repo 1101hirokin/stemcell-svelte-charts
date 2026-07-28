@@ -8,8 +8,8 @@
         "@stemcell/charts-core": "0.0.0-alpha.3",
       },
       "devDependencies": {
-        "@stemcell/svelte": "0.0.0-alpha.20",
-        "@stemcell/tokens": "0.0.0-alpha.15",
+        "@stemcell/svelte": "0.0.0-alpha.21",
+        "@stemcell/tokens": "0.0.0-alpha.16",
         "@sveltejs/package": "^2.5.8",
         "@sveltejs/vite-plugin-svelte": "^4.0.0",
         "@testing-library/svelte": "^5.2.0",
@@ -157,9 +157,9 @@
 
     "@stemcell/icons": ["@stemcell/icons@0.0.0-alpha.4", "http://localhost:4873/@stemcell/icons/-/icons-0.0.0-alpha.4.tgz", {}, "sha512-TDoXKEe3PNYdzAz0HgyrRbNtXhEmbUIXfaGf0AN4TgzljcqT6R9YenzBuNq7sgbVO0SdydAb/hdfnceUq/fCkw=="],
 
-    "@stemcell/svelte": ["@stemcell/svelte@0.0.0-alpha.20", "http://localhost:4873/@stemcell/svelte/-/svelte-0.0.0-alpha.20.tgz", { "dependencies": { "@stemcell/icons": "0.0.0-alpha.4" }, "peerDependencies": { "svelte": "^5.0.0" } }, "sha512-qcac5dMXbKG3u3A3th/3U+YRtriUmcgUzTMB4wcYOI7b+riuNHeiIFG05tbvRC3IckcQSI9z4L7EZ3jiKIqIRQ=="],
+    "@stemcell/svelte": ["@stemcell/svelte@0.0.0-alpha.21", "http://localhost:4873/@stemcell/svelte/-/svelte-0.0.0-alpha.21.tgz", { "dependencies": { "@stemcell/icons": "0.0.0-alpha.4", "@stemcell/tokens": "0.0.0-alpha.15" }, "peerDependencies": { "svelte": "^5.0.0" } }, "sha512-FLUiuRzpELumniMf096qlyF9TUrdsUZ7/l8JkxABsfoPVZiP3z2dvn0vYxQ38tQ6FIroXevni9pSMkcUh3aWfw=="],
 
-    "@stemcell/tokens": ["@stemcell/tokens@0.0.0-alpha.15", "http://localhost:4873/@stemcell/tokens/-/tokens-0.0.0-alpha.15.tgz", { "bin": { "stemcell-theme": "dist/theme/cli.js" } }, "sha512-/RrRz/hUKPsAB5Oq0Ls1QnYyZFfI9uUgXADjWF0z3JTTjVtX+qznTNJq9N+DXQzfBRcHIFrT/Flj4r+ygyzLTg=="],
+    "@stemcell/tokens": ["@stemcell/tokens@0.0.0-alpha.16", "http://localhost:4873/@stemcell/tokens/-/tokens-0.0.0-alpha.16.tgz", { "bin": { "stemcell-theme": "dist/theme/cli.js" } }, "sha512-gbwE03ZwPK0wAlZbIst8UAW51jxoxblNiPRrRpSL9LcAiE9nVcSq/so+K+R1SSB5Z4XL2NS2p3+SjJl0d6Juhg=="],
 
     "@sveltejs/acorn-typescript": ["@sveltejs/acorn-typescript@1.0.11", "", { "peerDependencies": { "acorn": "^8.9.0" } }, "sha512-LFuZUkjJ9iF7JZye/aG5XM0SFcQ5VyL0oVX4WJ9dc0Va3R3s0OauX1BESVCb+YN/ol8TAfqGDDAQsTG627Y5kw=="],
 
@@ -436,6 +436,8 @@
     "xmlchars": ["xmlchars@2.2.0", "", {}, "sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw=="],
 
     "zimmerframe": ["zimmerframe@1.1.4", "", {}, "sha512-B58NGBEoc8Y9MWWCQGl/gq9xBCe4IiKM0a2x7GZdQKOW5Exr8S1W24J6OgM1njK8xCRGvAJIL/MxXHf6SkmQKQ=="],
+
+    "@stemcell/svelte/@stemcell/tokens": ["@stemcell/tokens@0.0.0-alpha.15", "http://localhost:4873/@stemcell/tokens/-/tokens-0.0.0-alpha.15.tgz", { "bin": { "stemcell-theme": "dist/theme/cli.js" } }, "sha512-/RrRz/hUKPsAB5Oq0Ls1QnYyZFfI9uUgXADjWF0z3JTTjVtX+qznTNJq9N+DXQzfBRcHIFrT/Flj4r+ygyzLTg=="],
 
     "@testing-library/dom/aria-query": ["aria-query@5.3.0", "", { "dependencies": { "dequal": "^2.0.3" } }, "sha512-b0P0sZPKtyu8HkeRAfCq0IfURZK+SuwMjY1UXGBU27wpAiTwQAIlq56IbIO+ytk/JjS1fMR14ee5WBBfKi5J6A=="],
 
