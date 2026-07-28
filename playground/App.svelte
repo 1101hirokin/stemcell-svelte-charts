@@ -1,5 +1,6 @@
 <script lang="ts">
   import { BarChart } from '../src/lib/index';
+  import { Box, Button, Checkbox, Cluster, Container, Select, StemcellProvider, Stack, Switcher, Text } from '@stemcell/svelte';
   import {
     daily,
     dailyBySeries,
@@ -32,33 +33,50 @@
     orientation === 'vertical' ? { x: category, y: value, color } : { y: category, x: value, color };
 </script>
 
-<main>
-  <h1>svelte-charts playground</h1>
+{#snippet orientationLabel()}向き{/snippet}
+{#snippet stackingLabel()}積み方{/snippet}
+{#snippet valueLabelsLabel()}値の札{/snippet}
+{#snippet animateLabel()}描き込みアニメ{/snippet}
+
+<!-- Provider は面を持たない(テーマと密度を立てるだけ)。中身は包まない -->
+<StemcellProvider />
+
+<Container max="lg">
+  <Stack gap="lg">
+  <Text variant="title-lg" as="h1">svelte-charts playground</Text>
 
   <div class="pg-controls">
-    <label>
-      向き
-      <select bind:value={orientation}>
-        <option value="vertical">縦棒</option>
-        <option value="horizontal">横棒</option>
-      </select>
-    </label>
-    <label>
-      積み方
-      <select bind:value={stacking}>
-        <option value="group">並置</option>
-        <option value="stacked">積み上げ</option>
-        <option value="normalized">100% 積み上げ</option>
-      </select>
-    </label>
-    <label><input type="checkbox" bind:checked={valueLabels} /> 値の札</label>
-    <label><input type="checkbox" bind:checked={animate} /> 描き込みアニメ</label>
-    <button type="button" onclick={() => (take += 1)}>描き直す</button>
-    <span class="pg-note">選んだ点: {picked || '(まだ無い)'}</span>
+    <Cluster gap="md" align="center">
+      <Select
+        value={orientation}
+        options={[
+          { value: 'vertical', label: '縦棒' },
+          { value: 'horizontal', label: '横棒' },
+        ]}
+        onchange={(v) => (orientation = v as typeof orientation)}
+        size="sm"
+        label={orientationLabel}
+      />
+      <Select
+        value={stacking}
+        options={[
+          { value: 'group', label: '並置' },
+          { value: 'stacked', label: '積み上げ' },
+          { value: 'normalized', label: '100% 積み上げ' },
+        ]}
+        onchange={(v) => (stacking = v as typeof stacking)}
+        size="sm"
+        label={stackingLabel}
+      />
+      <Checkbox checked={valueLabels} onchange={(v) => (valueLabels = v)} label={valueLabelsLabel} />
+      <Checkbox checked={animate} onchange={(v) => (animate = v)} label={animateLabel} />
+      <Button variant="outlined" size="sm" onclick={() => (take += 1)}>描き直す</Button>
+      <Text variant="body-sm" muted>選んだ点: {picked || '(まだ無い)'}</Text>
+    </Cluster>
   </div>
 
-  <section>
-    <h2>描き込みアニメ（`animateOnAppear`。reduced-motion では動かない）</h2>
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>描き込みアニメ（`animateOnAppear`。reduced-motion では動かない）</Text>
     <!-- 描き直すと初回の描き込みがもう一度走る。速さと曲線は motion の規範に従い、細かい制御は持たない -->
     {#key take}
       <BarChart
@@ -75,10 +93,10 @@
         locale="ja-JP"
       />
     {/key}
-  </section>
+  </Stack>
 
-  <section>
-    <h2>素直な形（四半期 × 二系列）</h2>
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>素直な形（四半期 × 二系列）</Text>
     <BarChart
       ratio="16:9"
       data={quarterly}
@@ -95,10 +113,10 @@
       onhiddenchange={(next) => (hidden = next)}
       onpointactivate={(point) => (picked = `${point.category} ${point.series ?? ''} ${point.value}`)}
     />
-  </section>
+  </Stack>
 
-  <section>
-    <h2>系列が 8 つ（分類の色は 6 段。7 番目から回る）</h2>
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>系列が 8 つ（分類の色は 6 段。7 番目から回る）</Text>
     <BarChart
       ratio="16:9"
       data={eightSeries}
@@ -111,10 +129,10 @@
       tableLabel="表で見る"
       locale="ja-JP"
     />
-  </section>
+  </Stack>
 
-  <section>
-    <h2>桁が違いすぎる（12,400,000 と 12 と 0）</h2>
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>桁が違いすぎる（12,400,000 と 12 と 0）</Text>
     <BarChart
       ratio="16:9"
       data={wideRange}
@@ -126,10 +144,10 @@
       tableLabel="表で見る"
       locale="ja-JP"
     />
-  </section>
+  </Stack>
 
-  <section>
-    <h2>正と負が混ざる（積み上げると基線を挟む）</h2>
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>正と負が混ざる（積み上げると基線を挟む）</Text>
     <BarChart
       ratio="16:9"
       data={signedFlow}
@@ -142,10 +160,10 @@
       tableLabel="表で見る"
       locale="ja-JP"
     />
-  </section>
+  </Stack>
 
-  <section>
-    <h2>100% 積み上げに符号が混ざる（分母は絶対値の和）</h2>
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>100% 積み上げに符号が混ざる（分母は絶対値の和）</Text>
     <BarChart
       ratio="16:9"
       data={mixedNormalized}
@@ -157,10 +175,10 @@
       tableLabel="表で見る"
       locale="ja-JP"
     />
-  </section>
+  </Stack>
 
-  <section>
-    <h2>穴が空いている（空の値、読めない値、行そのものが無い、名前が空）</h2>
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>穴が空いている（空の値、読めない値、行そのものが無い、名前が空）</Text>
     <BarChart
       ratio="16:9"
       data={holes}
@@ -173,10 +191,10 @@
       locale="ja-JP"
       emptyLabel="在庫のデータがありません"
     />
-  </section>
+  </Stack>
 
-  <section>
-    <h2>名前が長い（切り詰める。斜めにも横倒しにもしない）</h2>
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>名前が長い（切り詰める。斜めにも横倒しにもしない）</Text>
     <BarChart
       ratio="16:9"
       data={longNames}
@@ -188,10 +206,10 @@
       tableLabel="表で見る"
       locale="ja-JP"
     />
-  </section>
+  </Stack>
 
-  <section>
-    <h2>90 日ぶん（下限で並べて横へ送る）</h2>
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>90 日ぶん（下限で並べて横へ送る）</Text>
     <BarChart
       ratio="21:9"
       data={daily}
@@ -202,10 +220,10 @@
       tableLabel="表で見る"
       locale="ja-JP"
     />
-  </section>
+  </Stack>
 
-  <section>
-    <h2>40 日 × 3 系列（多い × 多い）</h2>
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>40 日 × 3 系列（多い × 多い）</Text>
     <BarChart
       ratio="21:9"
       data={dailyBySeries}
@@ -217,11 +235,11 @@
       tableLabel="表で見る"
       locale="ja-JP"
     />
-  </section>
+  </Stack>
 
-  <section>
-    <h2>狭い場所に押し込む（18rem）</h2>
-    <div class="pg-narrow">
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>狭い場所に押し込む（18rem）</Text>
+    <Box style="inline-size: 18rem">
       <BarChart
         ratio="4:3"
         data={daily}
@@ -232,11 +250,11 @@
         tableLabel="表で見る"
         locale="ja-JP"
       />
-    </div>
-  </section>
+    </Box>
+  </Stack>
 
-  <section>
-    <h2>小数で、ほとんど同じ値（刻みが細かい）</h2>
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>小数で、ほとんど同じ値（刻みが細かい）</Text>
     <BarChart
       ratio="16:9"
       data={rates}
@@ -248,12 +266,12 @@
       tableLabel="表で見る"
       locale="ja-JP"
     />
-  </section>
+  </Stack>
 
-  <section>
-    <h2>一本だけ／同じ棒に二行（後の行を採って警告）</h2>
-    <div class="pg-row">
-      <div style="flex: 1; min-inline-size: 14rem">
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>一本だけ／同じ棒に二行（後の行を採って警告）</Text>
+    <Switcher threshold="20rem" gap="lg">
+      <Box>
         <BarChart
           ratio="4:3"
           data={single}
@@ -265,8 +283,8 @@
           tableLabel="表で見る"
           locale="ja-JP"
         />
-      </div>
-      <div style="flex: 1; min-inline-size: 14rem">
+      </Box>
+      <Box>
         <BarChart
           ratio="4:3"
           data={duplicated}
@@ -278,12 +296,12 @@
           tableLabel="表で見る"
           locale="ja-JP"
         />
-      </div>
-    </div>
-  </section>
+      </Box>
+    </Switcher>
+  </Stack>
 
-  <section>
-    <h2>データが無い</h2>
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>データが無い</Text>
     <BarChart
       ratio="16:9"
       data={[]}
@@ -293,5 +311,6 @@
       emptyLabel="この期間のデータはありません"
       tableLabel="表で見る"
     />
-  </section>
-</main>
+  </Stack>
+  </Stack>
+</Container>

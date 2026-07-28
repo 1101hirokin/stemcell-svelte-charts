@@ -1,35 +1,15 @@
-/* playground の飾り。部品の一部ではない(実物を見るための枠と下敷き)。 */
+/* playground の飾り。部品の一部ではない(実物を見るための下敷きと、上に貼り付く切り替えの帯)。
+   見出し・並び・版面・欄・押しボタンは @stemcell/svelte の部品が持つ。 */
 body {
   margin: 0;
   background: var(--color-app-background);
   color: var(--color-app-foreground);
   font-family: var(--typography-body-md-font-family);
 }
-main {
-  max-inline-size: 60rem;
-  margin: 0 auto;
-  padding: var(--spacing-inset-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-stack-lg);
-}
-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-stack-sm);
-  min-inline-size: 0;
-}
-h1 {
-  font-family: var(--typography-title-lg-font-family);
-  font-size: var(--typography-title-lg-font-size);
-  font-weight: var(--typography-title-lg-font-weight);
-  margin: 0;
-}
-h2 {
-  font-family: var(--typography-label-md-font-family);
-  font-size: var(--typography-label-md-font-size);
-  color: var(--color-app-fg-muted);
-  margin: 0;
+/* 版面の縦の余白だけ playground が持つ。横の版面と見出しの体裁と並びは部品が持つ
+   (Container / Stack / Cluster / Text) */
+#app {
+  padding-block: var(--spacing-inset-lg);
 }
 .pg-controls {
   position: sticky;
@@ -42,23 +22,7 @@ h2 {
   padding: var(--spacing-inset-sm) 0;
   background: var(--color-app-background);
   border-block-end: 1px solid var(--color-app-divider);
-  font-family: var(--typography-body-sm-font-family);
-  font-size: var(--typography-body-sm-font-size);
-}
-.pg-controls label {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-inline-sm);
-}
-.pg-note {
-  color: var(--color-app-fg-muted);
 }
 .pg-narrow {
   inline-size: 18rem;
-}
-.pg-row {
-  display: flex;
-  gap: var(--spacing-gap-lg);
-  align-items: start;
-  flex-wrap: wrap;
 }

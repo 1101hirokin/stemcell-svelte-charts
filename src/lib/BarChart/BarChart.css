@@ -302,7 +302,9 @@
 }
 .sc-barchart-bar-appear {
   transform-origin: var(--sc-origin-x, 0) var(--sc-origin-y, 0);
-  animation: sc-barchart-grow var(--motion-transition-duration) var(--motion-transition-easing);
+  /* 図の描き込みは UI の遷移より長い。棒は場所の高さぶん伸びるので、要素が数 px 動く
+     transition(150ms)では速すぎた(実物で確認。tokens alpha.14 で draw を新設) */
+  animation: sc-barchart-grow var(--motion-draw-duration) var(--motion-draw-easing);
 }
 .sc-barchart[data-orientation='horizontal'] .sc-barchart-bar-appear {
   --sc-grow-x: 0;
