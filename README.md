@@ -58,11 +58,16 @@ Stemcell の図の Svelte 実装。SVG で描く。
 
 ```sh
 bun install
-bun run test        # jsdom(構造・読み上げ・鍵盤)
+bun run test        # 適合(契約との照合)＋ jsdom(構造・読み上げ・鍵盤)
+bun run conformance # 適合だけ
 bun run check       # 型
 bun run playground  # 実物を触る
 bun run package     # dist
 ```
+
+適合テストは隣の仕様リポ（`../stemcell-component-prompts/contracts`）から生成する。契約の props 名・enum 値・
+既定値が実装の `meta.ts` と一致するか、必須トークンが CSS に現れるか、実装が引く字の役を契約が宣言して
+いるかを見る。契約が変わる PR は、仕様側を先にマージしてから実装側を出す。
 
 jsdom は配置を計算しないので、寸法は playground と Chromium で測る（`experiments/shot.ts`）。
 

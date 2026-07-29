@@ -38,8 +38,9 @@ describe('BarChart', () => {
   test('系列は分類の色を順に引く(図が自分で色を決めない)', () => {
     const { container } = render(BarChart, { props: base });
     const fills = bars(container).map((bar) => bar.getAttribute('fill'));
-    expect(fills[0]).toBe('var(--color-dataviz-categorical-1)');
-    expect(fills[1]).toBe('var(--color-dataviz-categorical-2)');
+    // 段だけを選ぶ。トークンの参照は frame.css に一箇所ある
+    expect(fills[0]).toBe('var(--sc-chart-series-1)');
+    expect(fills[1]).toBe('var(--sc-chart-series-2)');
   });
 
   test('表は常に在り、畳んで置く', () => {

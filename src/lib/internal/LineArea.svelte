@@ -72,7 +72,7 @@
   }: Props = $props();
 
   const RUNGS = 6;
-  const color = (index: number) => `var(--color-dataviz-categorical-${(index % RUNGS) + 1})`;
+  const color = (index: number) => `var(--sc-chart-series-${(index % RUNGS) + 1})`;
 
   let size = $state({ inline: 0, block: 0 });
   let cursor = $state<Cursor>({ series: 0, point: 0 });
