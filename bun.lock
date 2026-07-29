@@ -5,7 +5,7 @@
     "": {
       "name": "@stemcell/svelte-charts",
       "dependencies": {
-        "@stemcell/charts-core": "0.0.0-alpha.4",
+        "@stemcell/charts-core": "0.0.0-alpha.5",
       },
       "devDependencies": {
         "@stemcell/svelte": "0.0.0-alpha.21",
@@ -153,7 +153,7 @@
 
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.62.3", "", { "os": "win32", "cpu": "x64" }, "sha512-MOG/3gTOn4Fwf574RVOaY61I5o6P90legkFADiTyn1hyjNydT+cerU2rLUwPdZkKKyJ+iT+K9p7WXK4LM1Ka6g=="],
 
-    "@stemcell/charts-core": ["@stemcell/charts-core@0.0.0-alpha.4", "http://localhost:4873/@stemcell/charts-core/-/charts-core-0.0.0-alpha.4.tgz", {}, "sha512-7ty8zHrOWrJAFU63ki2SNIdkofSLCQTQtzTJFBoouE0yPJt8DiLOzfnBQMyzK2gzbCSraklEzpbbcHOEh3jJDQ=="],
+    "@stemcell/charts-core": ["@stemcell/charts-core@0.0.0-alpha.5", "http://localhost:4873/@stemcell/charts-core/-/charts-core-0.0.0-alpha.5.tgz", {}, "sha512-YpYD5+zx+nBnxagk5i3tLrRvCd2rYXZ87EHUseR/o7J820xicKHDSD317EEpQJJuDOCjLPeEIv1sbkqB3NT9DA=="],
 
     "@stemcell/icons": ["@stemcell/icons@0.0.0-alpha.4", "http://localhost:4873/@stemcell/icons/-/icons-0.0.0-alpha.4.tgz", {}, "sha512-TDoXKEe3PNYdzAz0HgyrRbNtXhEmbUIXfaGf0AN4TgzljcqT6R9YenzBuNq7sgbVO0SdydAb/hdfnceUq/fCkw=="],
 

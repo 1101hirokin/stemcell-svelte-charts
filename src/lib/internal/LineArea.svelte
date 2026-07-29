@@ -88,7 +88,8 @@
       includeZero,
       plot: size,
       hidden,
-      // TODO: 端の点の印が場所の縁で切れる。charts-core#2(xPadding)がマージされたら 6px 渡す
+      // 端の点の印が場所の縁に乗ると半分切れる。印の半径ぶん余地を空ける
+      xPadding: 6,
     }),
   );
 
