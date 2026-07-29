@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { AreaChart, BarChart, LineChart } from '../src/lib/index';
+  import { AreaChart, BarChart, LineChart, PieChart, ScatterChart, Sparkline } from '../src/lib/index';
   import { Box, Button, Checkbox, Cluster, Container, Select, StemcellProvider, Stack, Switcher, Text } from '@stemcell/svelte';
   import {
     broken,
@@ -13,8 +13,11 @@
     quarterly,
     rates,
     signedFlow,
+    breakdown,
+    cloud,
     single,
     timeline,
+    trends,
     narrowRange,
     wideRange,
   } from './data';
@@ -404,6 +407,83 @@
       </Box>
     </Switcher>
     {/key}
+  </Stack>
+
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>散布（大きさは面積。潰れたら薄く）</Text>
+    {#key take}
+      <ScatterChart
+        ratio="16:9"
+        animateOnAppear={animate}
+        data={cloud}
+        encoding={{ x: '費用', y: '売上', color: '区分', size: '規模' }}
+        pointSize={24}
+        legend
+        crosshair
+        label="費用と売上"
+        description="費用が増えるほど売上も増えるが、規模の大きい案件ほど散らばりが大きい。"
+        tableLabel="表で見る"
+        locale="ja-JP"
+      />
+    {/key}
+  </Stack>
+
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>円と輪（名前は外へ引き、入らない扇には出さない）</Text>
+    {#key take}
+      <Switcher threshold="20rem" gap="lg">
+        <Box>
+          <PieChart
+            ratio="1:1"
+            animateOnAppear={animate}
+            data={breakdown}
+            encoding={{ theta: '件数', color: '区分' }}
+            label="流入元の内訳"
+            tableLabel="表で見る"
+            locale="ja-JP"
+          />
+        </Box>
+        <Box>
+          <PieChart
+            ratio="1:1"
+            animateOnAppear={animate}
+            data={breakdown}
+            encoding={{ theta: '件数', color: '区分' }}
+            hole="donut"
+            legend
+            label="同じデータを輪で"
+            tableLabel="表で見る"
+            locale="ja-JP"
+          />
+        </Box>
+      </Switcher>
+    {/key}
+  </Stack>
+
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>小さな線（表の行末に置く。軸も表も持たない）</Text>
+    <table class="pg-table">
+      <thead>
+        <tr><th>商品</th><th>直近 12 週</th><th>今週</th></tr>
+      </thead>
+      <tbody>
+        {#each trends as row (row.name)}
+          <tr>
+            <td>{row.name}</td>
+            <td class="pg-spark">
+              <Sparkline
+                data={row.points}
+                encoding={{ x: '週', y: '値' }}
+                label={`${row.name} の直近 12 週`}
+                valueLabel="件"
+                locale="ja-JP"
+              />
+            </td>
+            <td>{row.points.at(-1)?.値}</td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
   </Stack>
 
   <Stack gap="sm">

@@ -171,3 +171,38 @@ export const narrowRange: Row[] = [
   { 時: '16時', 値: 1009 },
   { 時: '20時', 値: 993 },
 ];
+
+/** 散布(大きさの列を持つ)。 */
+export const cloud: Row[] = (() => {
+  const next = random(23);
+  const kinds = ['新規', '既存'];
+  return Array.from({ length: 60 }, (_, i) => {
+    const 費用 = Math.round(next() * 900 + 100);
+    const 区分 = kinds[i % kinds.length]!;
+    return {
+      費用,
+      売上: Math.round(費用 * (1.6 + next() * 1.2) + next() * 300),
+      規模: Math.round(next() * 90 + 10),
+      区分,
+    };
+  });
+})();
+
+/** 円(取り分。小さすぎる扇を含む)。 */
+export const breakdown: Row[] = [
+  { 区分: '検索', 件数: 4200 },
+  { 区分: '直接', 件数: 2600 },
+  { 区分: 'ソーシャル', 件数: 1400 },
+  { 区分: 'メール', 件数: 800 },
+  { 区分: '広告', 件数: 300 },
+  { 区分: 'その他', 件数: 60 },
+];
+
+/** 小さな線(表の行末に置く)。 */
+export const trends: { name: string; points: Row[] }[] = (() => {
+  const next = random(41);
+  return ['紙', '封筒', '印章', '帳簿'].map((name) => ({
+    name,
+    points: Array.from({ length: 12 }, (_, i) => ({ 週: `${i + 1}週`, 値: Math.round(next() * 60 + 20) })),
+  }));
+})();

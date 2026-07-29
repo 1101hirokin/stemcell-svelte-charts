@@ -1,0 +1,45 @@
+/* 円と輪(charts/PieChart.md)。扇の境は地の色の細い線で分ける。 */
+.sc-pie-slice {
+  stroke: var(--color-app-background);
+  stroke-width: 1;
+}
+.sc-pie-slice {
+  transition: filter var(--motion-transition-duration) var(--motion-transition-easing);
+}
+.sc-pie-slice:hover {
+  filter: brightness(0.92);
+}
+.sc-pie-slice:focus-visible {
+  outline: var(--focus-ring-width) var(--focus-ring-style) var(--color-app-system);
+  outline-offset: var(--focus-ring-offset);
+}
+/* 名前は扇の外へ引く。線は髪の毛一本 */
+.sc-pie-labels line {
+  stroke: var(--color-app-border);
+  stroke-width: 1;
+}
+.sc-pie-labels text {
+  fill: var(--color-app-fg-muted);
+  font-family: var(--typography-label-sm-font-family);
+  font-size: var(--typography-label-sm-font-size);
+}
+/* 描き込みは扇が回って現れる(真上から時計回りに描かれる方向) */
+@keyframes sc-pie-appear {
+  from {
+    transform: rotate(-90deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+}
+.sc-pie-appear {
+  transform-origin: center;
+  animation: sc-pie-appear var(--motion-draw-duration) var(--motion-draw-easing);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sc-pie-appear {
+    animation: none;
+  }
+}

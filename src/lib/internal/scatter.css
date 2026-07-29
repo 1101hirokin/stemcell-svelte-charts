@@ -1,0 +1,32 @@
+/* 散布(charts/ScatterChart.md)。潰れるときは間引かず薄くする。 */
+.sc-scatter-point {
+  /* 重なりの濃さで密度が読める。輪郭は不透明のまま残すので、一点でも見える */
+  fill-opacity: var(--sc-chart-point-opacity, 0.55);
+  stroke-width: 1;
+  /* 指したときの応えは瞬間で切り替えない(motion.md の transition) */
+  transition: fill-opacity var(--motion-transition-duration) var(--motion-transition-easing);
+}
+.sc-scatter-point:hover {
+  fill-opacity: 1;
+}
+.sc-scatter-point:focus-visible {
+  outline: var(--focus-ring-width) var(--focus-ring-style) var(--color-app-system);
+  outline-offset: var(--focus-ring-offset);
+}
+@keyframes sc-scatter-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* 散布は「描く方向」を持たない(点に順序が無い)ので、現れ方は淡く出るだけにする */
+.sc-scatter-appear {
+  animation: sc-scatter-appear var(--motion-draw-duration) var(--motion-draw-easing);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sc-scatter-appear {
+    animation: none;
+  }
+}

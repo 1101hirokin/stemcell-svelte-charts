@@ -26,6 +26,8 @@
     ratio?: string;
     /** 棒が伸びる向き。量の軸を縦に取るか横に取るか(BarChart だけが横を使う)。 */
     orientation?: 'vertical' | 'horizontal';
+    /** 軸の帯を出すか。円は軸を持たないので false(PieChart.md §1)。 */
+    axes?: boolean;
     /** 量の軸の札。at は札を置く位置(画面の座標)。 */
     valueTicks: { at: number; label: string }[];
     /** もう一方の軸の札。at は中心の位置、size は札の幅(切り詰める幅)。 */
@@ -57,6 +59,7 @@
     empty,
     ratio,
     orientation = 'vertical',
+    axes = true,
     valueTicks,
     categoryTicks,
     content,
@@ -148,6 +151,7 @@
     <p class="sc-chart-empty">{emptyLabel ?? ''}</p>
   {:else}
     <div class="sc-chart-frame" style={`--sc-chart-strip: ${vertical ? stripBlock : stripInline}px`}>
+      {#if axes}
       <div class="sc-chart-values" aria-hidden="true">
         <span class="sc-chart-value-gauge">{longestTick}</span>
         <!-- 位置ではなく順番で鍵を作る。場所がまだ測れていないと位置が全部同じになる(jsdom) -->
@@ -155,6 +159,7 @@
           <span class="sc-chart-value-label" style={`--sc-at: ${tick.at}px`}>{tick.label}</span>
         {/each}
       </div>
+      {/if}
 
       <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
       <div
@@ -165,6 +170,7 @@
       >
         <div class="sc-chart-track" style={`--sc-across: ${content}px`}>
           <div class="sc-chart-plot">{@render plot()}</div>
+          {#if axes}
           <div
             class="sc-chart-categories"
             aria-hidden="true"
@@ -182,6 +188,7 @@
               >
             {/each}
           </div>
+          {/if}
         </div>
       </div>
 
