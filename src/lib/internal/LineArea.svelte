@@ -73,7 +73,7 @@
   const RUNGS = 6;
   const color = (index: number) => `var(--color-dataviz-categorical-${(index % RUNGS) + 1})`;
 
-  let size = $state({ x: 0, y: 0 });
+  let size = $state({ inline: 0, block: 0 });
   let cursor = $state<Cursor>({ series: 0, point: 0 });
   let active = $state<number | null>(null); // 指している列の順番
   let plotEl: SVGSVGElement | undefined = $state();
@@ -86,7 +86,8 @@
       xKind,
       stacking,
       includeZero,
-      plot: size,
+      // 画面の箱を軸へ倒す。折れ線は向きを持たないので、x は横、y は量の軸
+      plot: { x: size.inline, y: size.block },
       hidden,
       // 端の点の印が場所の縁に乗ると半分切れる。印の半径ぶん余地を空ける
       xPadding: 6,
@@ -101,7 +102,7 @@
       percent: layout.valueKind === 'share',
       compact: layout.valueKind === 'value',
     });
-    return layout.ticks.map((t, i) => ({ at: size.y - t.at, label: labels[i] ?? '' }));
+    return layout.ticks.map((t, i) => ({ at: size.block - t.at, label: labels[i] ?? '' }));
   });
 
   const xTicks = $derived.by(() => {
@@ -109,12 +110,12 @@
       layout.xKind === 'time' && layout.time
         ? formatTimeTicks(layout.time, locale)
         : layout.xTicks.map((t) => (t.label ? t.label : formatValue(t.value, { locale, compact: true })));
-    const width = layout.xTicks.length > 1 ? Math.abs(layout.xTicks[1]!.at - layout.xTicks[0]!.at) : size.x;
+    const width = layout.xTicks.length > 1 ? Math.abs(layout.xTicks[1]!.at - layout.xTicks[0]!.at) : size.inline;
     return layout.xTicks.map((t, i) => ({ at: t.at, size: Math.max(width, 8), label: labels[i] ?? '' }));
   });
 
   // 画面へ倒す。量の軸は下から上なので上下を返す(計算層は向きを持たない)
-  const sy = (y: number): number => size.y - y;
+  const sy = (y: number): number => size.block - y;
 
   const path = (points: LinePoint[]): string =>
     points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(2)},${sy(p.y).toFixed(2)}`).join(' ');
@@ -226,8 +227,8 @@
   {color}
   {empty}
   {valueTicks}
-  {xTicks}
-  contentX={size.x}
+  categoryTicks={xTicks}
+  content={size.inline}
   scrolls={false}
   {table}
   bind:size
@@ -238,9 +239,9 @@
 {#snippet plot()}
   <svg
     class="sc-chart-svg"
-    width={size.x}
-    height={size.y}
-    viewBox={`0 0 ${size.x} ${size.y}`}
+    width={size.inline}
+    height={size.block}
+    viewBox={`0 0 ${size.inline} ${size.block}`}
     role="presentation"
     bind:this={plotEl}
     onkeydown={handleKey}
@@ -250,15 +251,15 @@
     <!-- グリッドは量の軸にだけ引く。枠では囲まない(dataviz §4-2) -->
     <g class="sc-chart-grid">
       {#each layout.ticks as t (t.value)}
-        <line x1="0" x2={size.x} y1={sy(t.at)} y2={sy(t.at)} />
+        <line x1="0" x2={size.inline} y1={sy(t.at)} y2={sy(t.at)} />
       {/each}
     </g>
 
     {#if crosshair && atColumn}
-      <g class="sc-chart-crosshair"><line x1={atColumn.x} x2={atColumn.x} y1="0" y2={size.y} /></g>
+      <g class="sc-chart-crosshair"><line x1={atColumn.x} x2={atColumn.x} y1="0" y2={size.block} /></g>
     {/if}
 
-    <g class="sc-chart-baseline"><line x1="0" x2={size.x} y1={sy(layout.baseline)} y2={sy(layout.baseline)} /></g>
+    <g class="sc-chart-baseline"><line x1="0" x2={size.inline} y1={sy(layout.baseline)} y2={sy(layout.baseline)} /></g>
 
     {#each layout.series as s (s.series ?? s.seriesIndex)}
       <g class="sc-linearea-series" class:sc-linearea-appear={animateOnAppear}>

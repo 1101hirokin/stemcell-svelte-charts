@@ -24,17 +24,19 @@
     empty: boolean;
     /** 縦横比(「16:9」)。 */
     ratio?: string;
-    /** 量の軸の札。at は軸の始まりからの距離。 */
+    /** 棒が伸びる向き。量の軸を縦に取るか横に取るか(BarChart だけが横を使う)。 */
+    orientation?: 'vertical' | 'horizontal';
+    /** 量の軸の札。at は札を置く位置(画面の座標)。 */
     valueTicks: { at: number; label: string }[];
-    /** x 軸の札。at は位置、size は札の幅(切り詰める幅)。 */
-    xTicks: { at: number; size: number; label: string }[];
-    /** 絵に要る幅。場所より広ければ横へ送る。 */
-    contentX: number;
+    /** もう一方の軸の札。at は中心の位置、size は札の幅(切り詰める幅)。 */
+    categoryTicks: { at: number; size: number; label: string }[];
+    /** 絵に要る大きさ。場所より広ければ送る。 */
+    content: number;
     scrolls: boolean;
     /** 同じデータの表。 */
     table: TableModel;
-    /** 測った場所の大きさ(x は横、y は量の軸)。 */
-    size?: { x: number; y: number };
+    /** 測った場所の大きさ(画面の箱)。軸へ倒すのは各図の仕事である。 */
+    size?: { inline: number; block: number };
     /** 絵。measured の大きさで描く。 */
     plot: Snippet;
     /** 指したものの値(位置は各図が --sc-x / --sc-y で渡す)。 */
@@ -54,12 +56,13 @@
     color,
     empty,
     ratio,
+    orientation = 'vertical',
     valueTicks,
-    xTicks,
-    contentX,
+    categoryTicks,
+    content,
     scrolls,
     table,
-    size = $bindable({ x: 0, y: 0 }),
+    size = $bindable({ inline: 0, block: 0 }),
     plot,
     tooltip,
   }: Props = $props();
@@ -72,9 +75,15 @@
   // 次の計算で溢れなくなる堂々巡りになる(HOLES #3)
   let boxWidth = $state(0);
   let boxHeight = $state(0);
+  /** カテゴリの札の帯の厚み。縦棒では高さ、横棒では幅。 */
   let stripBlock = $state(0);
+  let stripInline = $state(0);
+  const vertical = $derived(orientation === 'vertical');
   $effect(() => {
-    size = { x: Math.max(boxWidth, 1), y: Math.max(boxHeight - stripBlock, 1) };
+    size = {
+      inline: Math.max(vertical ? boxWidth : boxWidth - stripInline, 1),
+      block: Math.max(vertical ? boxHeight - stripBlock : boxHeight, 1),
+    };
   });
 
   let tableOpen = $state(false);
@@ -108,6 +117,7 @@
   role="group"
   aria-labelledby={labelId}
   aria-describedby={description ? descriptionId : undefined}
+  data-orientation={orientation}
   data-scrolls={scrolls ? 'true' : undefined}
   style={ratio ? `--sc-chart-ratio: ${ratio.replace(':', ' / ')}` : undefined}
 >
@@ -137,7 +147,7 @@
   {#if empty}
     <p class="sc-chart-empty">{emptyLabel ?? ''}</p>
   {:else}
-    <div class="sc-chart-frame" style={`--sc-chart-x-strip: ${stripBlock}px`}>
+    <div class="sc-chart-frame" style={`--sc-chart-strip: ${vertical ? stripBlock : stripInline}px`}>
       <div class="sc-chart-values" aria-hidden="true">
         <span class="sc-chart-value-gauge">{longestTick}</span>
         <!-- 位置ではなく順番で鍵を作る。場所がまだ測れていないと位置が全部同じになる(jsdom) -->
@@ -153,14 +163,22 @@
         bind:clientWidth={boxWidth}
         bind:clientHeight={boxHeight}
       >
-        <div class="sc-chart-track" style={`--sc-across: ${contentX}px`}>
+        <div class="sc-chart-track" style={`--sc-across: ${content}px`}>
           <div class="sc-chart-plot">{@render plot()}</div>
-          <div class="sc-chart-x" aria-hidden="true" bind:clientHeight={stripBlock}>
+          <div
+            class="sc-chart-categories"
+            aria-hidden="true"
+            bind:clientHeight={stripBlock}
+            bind:clientWidth={stripInline}
+          >
             <!-- 端の札は場所の中へ寄せる。中心に揃えたままだと、両端で半分はみ出して切れる -->
-            {#each xTicks as tick, index (`${tick.label}-${index}`)}
-              {@const start = Math.min(Math.max(tick.at - tick.size / 2, 0), Math.max(contentX - tick.size, 0))}
-              <span class="sc-chart-x-label" title={tick.label} style={`--sc-start: ${start}px; --sc-size: ${tick.size}px`}
-                >{tick.label}</span
+            {#each categoryTicks as tick, index (`${tick.label}-${index}`)}
+              {@const limit = Math.max((vertical ? content : size.block) - tick.size, 0)}
+              {@const start = Math.min(Math.max(tick.at - tick.size / 2, 0), limit)}
+              <span
+                class="sc-chart-category"
+                title={tick.label}
+                style={`--sc-start: ${start}px; --sc-size: ${tick.size}px`}>{tick.label}</span
               >
             {/each}
           </div>
