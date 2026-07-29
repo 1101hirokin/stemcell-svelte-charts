@@ -15,6 +15,7 @@
     type Row,
   } from '@stemcell/charts-core';
   import { tick } from 'svelte';
+  import { isRtl, observeDirection } from '../internal/direction';
 
   // 長さで量を比べる図(charts/BarChart.md)。決め事(刻み・配置・最小の長さ・送るかどうか)は
   // @stemcell/charts-core が持ち、外枠(名前・凡例・軸の札・送れる領域・表)は Frame が持つ。
@@ -107,18 +108,26 @@
       : { width: Math.max(size.inline, 1), height: layout.content.across },
   );
 
-  // RTL では横棒の基線が行の始まり側(右)へ移る。読みの向きは環境から取る(第6条)
-  const rtl = $derived.by(() => {
+  // 読みの向き。SVG の座標は物理なので、RTL では絵の x を鏡にして、札(論理プロパティで置く)と揃える。
+  // 横棒では基線が行の始まり側(右)へ移り、縦棒ではカテゴリが右から並ぶ(第6条: 文脈は環境から)
+  // 読みの向きは計算した値ではなく、環境に聞いて持つ。derived に置くと、要素が結ばれた後に
+  // 読み直されず false のままだった(実測)。効果で読み、場所の大きさが変わるたびに見直す
+  let rtl = $state(false);
+  $effect(() => {
     void size.inline;
-    if (!plotEl || typeof getComputedStyle !== 'function') return false;
-    return getComputedStyle(plotEl).direction === 'rtl';
+    const read = () => (rtl = isRtl(plotEl));
+    read();
+    // 向きは後から変わりうる(地域の切り替え、文書の一部だけ RTL)ので見張る
+    return observeDirection(plotEl, read);
   });
 
   /** 計算層の距離を画面の矩形へ倒す。ここだけが向きを知っている。 */
   function rect(bar: Bar): { x: number; y: number; width: number; height: number } {
     const length = bar.to - bar.from;
     if (vertical) {
-      return { x: bar.offset, y: canvas.height - bar.to, width: bar.thickness, height: length };
+      // 縦棒では、カテゴリが並ぶ軸が横。RTL では右から並ぶ
+      const x = rtl ? canvas.width - bar.offset - bar.thickness : bar.offset;
+      return { x, y: canvas.height - bar.to, width: bar.thickness, height: length };
     }
     return { x: rtl ? canvas.width - bar.to : bar.from, y: bar.offset, width: length, height: bar.thickness };
   }
@@ -136,7 +145,11 @@
       { locale, percent: layout.valueKind === 'share', compact: layout.valueKind === 'value' },
     ),
   );
-  const valueTicks = $derived(layout.ticks.map((t, i) => ({ at: tickAt(t.at), label: tickLabels[i] ?? '' })));
+  // 札は Frame が論理プロパティで置く(RTL では自動で反転する)ので、ここで鏡にしない。
+  // 縦棒の量の軸は縦なので、上下だけ返す
+  const valueTicks = $derived(
+    layout.ticks.map((t, i) => ({ at: vertical ? canvas.height - t.at : t.at, label: tickLabels[i] ?? '' })),
+  );
   const categoryTicks = $derived(
     layout.categories.map((category, index) => {
       const band = layout.categoryBands[index];
@@ -313,11 +326,12 @@
         {#each layout.bars as bar (`${bar.category} ${bar.series ?? ''}`)}
           {@const box = rect(bar)}
           {@const negative = bar.value < 0}
-          <!-- 札は棒の外側、伸びた先に置く。負の値では反対側になる -->
+          <!-- 札は棒の外側、伸びた先に置く。負の値では反対側、RTL の横棒ではさらに逆になる -->
+          {@const toRight = vertical ? true : negative === rtl}
           <text
-            x={vertical ? box.x + box.width / 2 : negative ? box.x - 4 : box.x + box.width + 4}
+            x={vertical ? box.x + box.width / 2 : toRight ? box.x + box.width + 4 : box.x - 4}
             y={vertical ? (negative ? box.y + box.height + 12 : box.y - 4) : box.y + box.height / 2}
-            text-anchor={vertical ? 'middle' : negative ? 'end' : 'start'}
+            text-anchor={vertical ? 'middle' : toRight ? 'start' : 'end'}
             dominant-baseline={vertical ? 'auto' : 'middle'}
           >
             {formatValue(bar.value, { locale, compact: true })}

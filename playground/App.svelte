@@ -312,6 +312,7 @@
     <Text variant="label-md" as="h2" muted>折れ線（時間の軸。欠測は空きになる）</Text>
     <LineChart
       ratio="16:9"
+      animateOnAppear={animate}
       data={timeline}
       encoding={{ x: '日', y: '件数', color: '区分' }}
       scale={{ x: 'time' }}
@@ -374,6 +375,7 @@
       <Box>
         <AreaChart
           ratio="4:3"
+          animateOnAppear={animate}
           data={timeline}
           encoding={{ x: '日', y: '件数', color: '区分' }}
           scale={{ x: 'time' }}
@@ -386,6 +388,7 @@
       <Box>
         <AreaChart
           ratio="4:3"
+          animateOnAppear={animate}
           data={timeline}
           encoding={{ x: '日', y: '件数', color: '区分' }}
           scale={{ x: 'time' }}
