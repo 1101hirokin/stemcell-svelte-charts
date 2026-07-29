@@ -1,6 +1,6 @@
 # @stemcell/svelte-charts
 
-Stemcell の図の Svelte 実装。SVG で描く。
+Stemcell の図の Svelte 実装。SVG で描く。v1 の六図（棒・折れ線・面・散布・円/輪・小さな線）が揃っている。
 
 決め事（刻み、配置、最小の長さ、太さの上下限、送るかどうか、表の組み立て）は
 [`@stemcell/charts-core`](https://github.com/1101hirokin/stemcell-charts-core) が持つ。ここはそれを
@@ -9,6 +9,15 @@ Stemcell の図の Svelte 実装。SVG で描く。
 描画のエンジン（ECharts、Observable Plot、Chart.js など）には依存しない。棒は矩形と直線で足りる。
 
 ## 使い方
+
+| 部品 | 何を読む図か |
+|---|---|
+| `BarChart` | 長さで量を比べる。縦棒と横棒、並置と積み上げと 100% |
+| `LineChart` | 位置で量を比べる。時間の軸、欠けたところの橋 |
+| `AreaChart` | 積み重なりと取り分。既定は積む |
+| `ScatterChart` | 二つの量の関係。大きさは面積で符号化 |
+| `PieChart` | 全体に対する取り分。円と輪 |
+| `Sparkline` | 文や表のセルの中の小さな線。軸も表も持たない |
 
 ```svelte
 <script>

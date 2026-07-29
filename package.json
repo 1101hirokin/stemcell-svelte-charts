@@ -1,6 +1,6 @@
 {
   "name": "@stemcell/svelte-charts",
-  "version": "0.0.0-alpha.0",
+  "version": "0.0.0-alpha.1",
   "type": "module",
   "description": "Stemcell の図の Svelte 実装。決め事は @stemcell/charts-core が持ち、ここは SVG で描く(component-prompts の charts/*.md に適合する)。",
   "exports": {
