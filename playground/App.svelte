@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { BarChart } from '../src/lib/index';
+  import { AreaChart, BarChart, LineChart } from '../src/lib/index';
   import { Box, Button, Checkbox, Cluster, Container, Select, StemcellProvider, Stack, Switcher, Text } from '@stemcell/svelte';
   import {
+    broken,
     daily,
     dailyBySeries,
     duplicated,
@@ -13,6 +14,8 @@
     rates,
     signedFlow,
     single,
+    timeline,
+    narrowRange,
     wideRange,
   } from './data';
 
@@ -298,6 +301,97 @@
           {stacking}
           {valueLabels}
           label="重なった行"
+          tableLabel="表で見る"
+          locale="ja-JP"
+        />
+      </Box>
+    </Switcher>
+  </Stack>
+
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>折れ線（時間の軸。欠測は空きになる）</Text>
+    <LineChart
+      ratio="16:9"
+      data={timeline}
+      encoding={{ x: '日', y: '件数', color: '区分' }}
+      scale={{ x: 'time' }}
+      legend
+      markers
+      label="日別の件数"
+      description="1月から5月まで。甲は3月、乙は4月が欠測。"
+      tableLabel="表で見る"
+      locale="ja-JP"
+    />
+  </Stack>
+
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>折れ線（穴。左は切る、右は点線の橋）</Text>
+    <Switcher threshold="20rem" gap="lg">
+      <Box>
+        <LineChart
+          ratio="4:3"
+          data={broken}
+          encoding={{ x: '日', y: '値' }}
+          scale={{ x: 'category' }}
+          label="切る（既定）"
+          tableLabel="表で見る"
+          locale="ja-JP"
+        />
+      </Box>
+      <Box>
+        <LineChart
+          ratio="4:3"
+          data={broken}
+          encoding={{ x: '日', y: '値' }}
+          scale={{ x: 'category' }}
+          gaps="bridge"
+          label="点線の橋"
+          tableLabel="表で見る"
+          locale="ja-JP"
+        />
+      </Box>
+    </Switcher>
+  </Stack>
+
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>折れ線（狭い範囲。ゼロ基線を省く）</Text>
+    <LineChart
+      ratio="16:9"
+      data={narrowRange}
+      encoding={{ x: '時', y: '値' }}
+      scale={{ x: 'category' }}
+      markers
+      crosshair
+      label="時刻ごとの値"
+      tableLabel="表で見る"
+      locale="ja-JP"
+    />
+  </Stack>
+
+  <Stack gap="sm">
+    <Text variant="label-md" as="h2" muted>面（既定は積む。ゼロ基線は省かない）</Text>
+    <Switcher threshold="20rem" gap="lg">
+      <Box>
+        <AreaChart
+          ratio="4:3"
+          data={timeline}
+          encoding={{ x: '日', y: '件数', color: '区分' }}
+          scale={{ x: 'time' }}
+          legend
+          label="積む（既定）"
+          tableLabel="表で見る"
+          locale="ja-JP"
+        />
+      </Box>
+      <Box>
+        <AreaChart
+          ratio="4:3"
+          data={timeline}
+          encoding={{ x: '日', y: '件数', color: '区分' }}
+          scale={{ x: 'time' }}
+          stacking="group"
+          legend
+          label="重ねる（薄く塗る）"
           tableLabel="表で見る"
           locale="ja-JP"
         />

@@ -1,0 +1,47 @@
+/* 折れ線と面(charts/LineChart.md / charts/AreaChart.md)。線は細く、面は薄く、点は小さく。 */
+.sc-linearea-line {
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+/* 橋は必ず点線。実線にすると、観測した値と観測していない区間の区別が消える */
+.sc-linearea-bridge {
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+  opacity: 0.7;
+}
+/* 重ねた面は薄く塗り、輪郭の線は不透明のまま残す(隠れた系列でも形が読める) */
+.sc-linearea-fill {
+  opacity: var(--sc-chart-area-opacity, 0.25);
+}
+/* 点は指定で出す。孤立した点(前後が欠けている)は指定が無くても出る */
+.sc-linearea-point {
+  r: 0;
+}
+.sc-linearea-point[data-visible='true'] {
+  r: 3.5;
+}
+.sc-linearea-point:focus-visible {
+  r: 5;
+  outline: var(--focus-ring-width) var(--focus-ring-style) var(--color-app-system);
+  outline-offset: var(--focus-ring-offset);
+}
+/* 初回の描き込み。線は左から現れ、面は基線から立ち上がる。細かい制御は持たない */
+@keyframes sc-linearea-appear {
+  from {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+.sc-linearea-appear {
+  animation: sc-linearea-appear var(--motion-draw-duration) var(--motion-draw-easing);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sc-linearea-appear {
+    animation: none;
+  }
+}
