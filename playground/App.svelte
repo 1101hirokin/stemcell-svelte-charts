@@ -354,7 +354,7 @@
           data={broken}
           encoding={{ x: '日', y: '値' }}
           scale={{ x: 'category' }}
-          missing="bridge"
+          missingValues="bridge"
           label="点線の橋"
           tableLabel="表で見る"
           locale="ja-JP"

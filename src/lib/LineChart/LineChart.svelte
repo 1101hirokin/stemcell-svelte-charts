@@ -1,6 +1,6 @@
 <script lang="ts">
   import LineArea from '../internal/LineArea.svelte';
-  import { META, type LineChartMissing } from './meta';
+  import { META, type LineChartMissingValues } from './meta';
   import type { AxisKind, Encoding, Row } from '@stemcell/charts-core';
 
   // 位置で量を比べる図(charts/LineChart.md)。点を順に結んで動きを見る。
@@ -13,7 +13,7 @@
     /** 線の上に点の印を出す。孤立した点は指定が無くても出る。 */
     markers?: boolean;
     /** 値が無いところの扱い。break は切る、bridge は点線の橋を架ける。 */
-    missing?: LineChartMissing;
+    missingValues?: LineChartMissingValues;
     legend?: boolean;
     tooltip?: boolean;
     crosshair?: boolean;
@@ -31,7 +31,7 @@
 
   let {
     markers = META.props.markers.default,
-    missing = META.props.missing.default,
+    missingValues = META.props.missingValues.default,
     legend = META.props.legend.default,
     tooltip = META.props.tooltip.default,
     crosshair = META.props.crosshair.default,
@@ -44,7 +44,7 @@
 <LineArea
   {...rest}
   {markers}
-  {missing}
+  {missingValues}
   {legend}
   {tooltip}
   {crosshair}
