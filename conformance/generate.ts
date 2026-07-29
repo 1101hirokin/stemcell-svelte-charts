@@ -6,7 +6,8 @@
  * 図の束のために二つだけ変えてある。
  *
  *   1. CSS は部品ごとに一枚ではない。外枠は internal/frame.css が持ち、図ごとの CSS はその上に
- *      薄く乗る。だから必須トークンは「その図の CSS と internal の CSS すべて」の中を探す。
+ *      薄く乗る。だから import を辿って「その部品が実際に読む CSS」を集める(conformance/css.ts)。
+ *      internal を丸ごと見る形にしたら、小さな線が円の CSS の字の役を要求されて赤くなった。
  *   2. 基底の契約(Chart)は実装を持たない。実装(meta.ts)のある契約だけを見て、残りは未実装として
  *      一覧に出す。
  *
@@ -95,23 +96,13 @@ for (const name of dirs) {
     `// 自動生成。編集しない(源は契約)。
 import { describe, it, expect } from 'vitest';
 import { META } from '../../src/lib/${name}/meta';
-import { readdirSync, readFileSync, existsSync } from 'node:fs';
+import { cssFor } from '../css';
 import { join } from 'node:path';
 
 const SPEC = ${JSON.stringify(spec, null, 2)} as const;
 
-/** その図の CSS と、外枠を持つ internal の CSS すべて。 */
-function css(): string {
-  const own = join(__dirname, '../../src/lib/${name}/${name}.css');
-  const internal = join(__dirname, '../../src/lib/internal');
-  const files = [
-    ...(existsSync(own) ? [own] : []),
-    ...(existsSync(internal)
-      ? readdirSync(internal).filter((f) => f.endsWith('.css')).map((f) => join(internal, f))
-      : []),
-  ];
-  return files.map((f) => readFileSync(f, 'utf-8')).join('\\n');
-}
+/** その部品が実際に読み込む CSS(import を辿る)。 */
+const css = () => cssFor(join(__dirname, '../../src/lib'), '${name}');
 
 describe('${name} conformance', () => {
   it('props: 名前の集合が契約と過不足なく一致する', () => {

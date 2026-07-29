@@ -4,3 +4,7 @@ export { default as LineChart } from './LineChart/LineChart.svelte';
 export type { LineChartGaps } from './LineChart/meta';
 export { default as AreaChart } from './AreaChart/AreaChart.svelte';
 export type { AreaChartStacking } from './AreaChart/meta';
+export { default as ScatterChart } from './ScatterChart/ScatterChart.svelte';
+export { default as PieChart } from './PieChart/PieChart.svelte';
+export type { PieChartHole } from './PieChart/meta';
+export { default as Sparkline } from './Sparkline/Sparkline.svelte';

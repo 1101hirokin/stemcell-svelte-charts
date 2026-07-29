@@ -27,3 +27,20 @@ body {
 .pg-narrow {
   inline-size: 18rem;
 }
+/* 小さな線を置く見本の表(playground の飾り。部品の Table ではない) */
+.pg-table {
+  border-collapse: collapse;
+  inline-size: 100%;
+  font-family: var(--typography-body-sm-font-family);
+  font-size: var(--typography-body-sm-font-size);
+}
+.pg-table th,
+.pg-table td {
+  text-align: start;
+  padding: var(--spacing-inset-sm);
+  border-block-end: 1px solid var(--color-app-divider);
+}
+.pg-spark {
+  inline-size: 12rem;
+  block-size: 2rem;
+}
