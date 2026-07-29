@@ -1,0 +1,223 @@
+/* 図の外枠。名前・説明・凡例・軸の札・送れる領域・表を持つ。中の絵は各図が描く。
+   姿の方針は「シャープでスリム」(裁定 2026-07-29): 線は髪の毛一本、面は塗らない、角は丸めない、
+   札は小さく控える。 */
+.sc-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-stack-sm);
+  color: var(--color-app-foreground);
+  min-inline-size: 0;
+  /* 置き場所に高さがあれば、絵がそれを埋める(高さは置かれた場所に従う。dataviz §4-2)。
+     場所の高さが auto なら 100% も auto に解けるので、比(ratio)か成り行きの高さになる。 */
+  block-size: 100%;
+  min-block-size: 0;
+  /* 内側の重なりを部品の中で閉じる(layering.md §3) */
+  isolation: isolate;
+}
+
+/* 図の名前。見出しの意味は持たない(画面の階層はアプリのもの) */
+.sc-chart-label {
+  font-family: var(--typography-label-md-font-family);
+  font-size: var(--typography-label-md-font-size);
+  font-weight: var(--typography-label-md-font-weight);
+  line-height: var(--typography-label-md-line-height);
+  letter-spacing: var(--typography-label-md-letter-spacing);
+}
+
+/* 長い説明は読み上げへ渡す。図の隣に文章を置くかはアプリの判断なので、部品は場所を取らない */
+.sc-chart-description {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sc-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-inline-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sc-chart-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-inline-sm);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-app-fg-muted);
+  font-family: var(--typography-label-sm-font-family);
+  font-size: var(--typography-label-sm-font-size);
+  line-height: var(--typography-label-sm-line-height);
+  cursor: pointer;
+}
+.sc-chart-legend-item:focus-visible {
+  outline: var(--focus-ring-width) var(--focus-ring-style) var(--color-app-system);
+  outline-offset: var(--focus-ring-offset);
+}
+/* 隠している系列は、消さずに薄くする(戻せることが見えている必要がある) */
+.sc-chart-legend-item[aria-pressed='true'] {
+  color: var(--color-app-fg-disabled);
+}
+.sc-chart-legend-item[aria-pressed='true'] .sc-chart-swatch {
+  opacity: 0.3;
+}
+.sc-chart-swatch {
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+  flex: none;
+}
+
+.sc-chart-empty {
+  margin: 0;
+  color: var(--color-app-fg-muted);
+  font-family: var(--typography-body-sm-font-family);
+  font-size: var(--typography-body-sm-font-size);
+  line-height: var(--typography-body-sm-line-height);
+}
+
+.sc-chart-frame {
+  position: relative;
+  display: flex;
+  flex: 1 0 auto;
+  gap: var(--spacing-inline-sm);
+  min-inline-size: 0;
+  min-block-size: 6rem;
+  aspect-ratio: var(--sc-chart-ratio, auto);
+}
+
+/* 量の軸の札。送っても動かない */
+.sc-chart-values {
+  position: relative;
+  flex: none;
+  inline-size: max-content;
+  padding-block-end: var(--sc-chart-x-strip, 1.25rem);
+  color: var(--color-app-fg-muted);
+  font-family: var(--typography-label-sm-font-family);
+  font-size: var(--typography-label-sm-font-size);
+  line-height: 1;
+  letter-spacing: var(--typography-label-sm-letter-spacing);
+}
+/* 札は絶対配置なので、いちばん長い札を見えない字で置いて列の幅を作る */
+.sc-chart-value-gauge {
+  visibility: hidden;
+  white-space: nowrap;
+}
+.sc-chart-value-label {
+  position: absolute;
+  inset-inline-end: 0;
+  inset-block-start: var(--sc-at);
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+
+/* 送れる領域。溢れたときだけ焦点を受ける(SC 2.1.1)。送るかどうかは計算層の答えに従う */
+.sc-chart-scroll {
+  flex: 1;
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: hidden;
+}
+.sc-chart[data-scrolls='true'] .sc-chart-scroll {
+  overflow-x: auto;
+}
+.sc-chart-scroll:focus-visible {
+  outline: var(--focus-ring-width) var(--focus-ring-style) var(--color-app-system);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+}
+
+.sc-chart-track {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+  inline-size: max(100%, var(--sc-across));
+}
+.sc-chart-plot {
+  flex: 1;
+  min-block-size: 0;
+  min-inline-size: 0;
+}
+.sc-chart-svg {
+  display: block;
+}
+
+/* x 軸の札。帯の幅で切り詰める(斜めに倒さない、間引かない) */
+.sc-chart-x {
+  position: relative;
+  flex: none;
+  block-size: 1.25rem;
+  color: var(--color-app-fg-muted);
+  font-family: var(--typography-label-sm-font-family);
+  font-size: var(--typography-label-sm-font-size);
+  line-height: 1.25rem;
+  letter-spacing: var(--typography-label-sm-letter-spacing);
+}
+.sc-chart-x-label {
+  position: absolute;
+  inset-inline-start: var(--sc-start);
+  inline-size: var(--sc-size);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 指したものの値。面は薄く、角は丸めず、線は一本 */
+.sc-chart-tooltip {
+  position: absolute;
+  inset-inline-start: var(--sc-x);
+  inset-block-start: var(--sc-y);
+  transform: translate(-50%, calc(-100% - 0.25rem));
+  padding: 0.125rem var(--spacing-inset-sm);
+  background: var(--color-app-surface-raised);
+  color: var(--color-app-foreground);
+  border: var(--shape-border-width) solid var(--color-app-border);
+  font-family: var(--typography-body-sm-font-family);
+  font-size: var(--typography-body-sm-font-size);
+  line-height: var(--typography-body-sm-line-height);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.sc-chart-tooltip dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0 var(--spacing-inline-sm);
+}
+.sc-chart-tooltip dt {
+  color: var(--color-app-fg-muted);
+}
+.sc-chart-tooltip dd {
+  margin: 0;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.sc-chart-table {
+  margin-block-start: var(--spacing-stack-sm);
+  flex: 0 0 auto;
+}
+
+/* 軸とグリッド。線は髪の毛一本 */
+.sc-chart-grid line {
+  stroke: var(--color-app-divider);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.sc-chart-baseline line {
+  stroke: var(--color-app-border);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.sc-chart-crosshair line {
+  stroke: var(--color-app-fg-muted);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
