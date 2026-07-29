@@ -171,9 +171,9 @@
   });
 
   const color = (bar: Bar): string =>
-    `var(--color-dataviz-categorical-${(bar.seriesIndex % WEB.categoricalRungs) + 1})`;
+    `var(--sc-chart-series-${(bar.seriesIndex % WEB.categoricalRungs) + 1})`;
   const seriesColor = (index: number): string =>
-    `var(--color-dataviz-categorical-${(index % WEB.categoricalRungs) + 1})`;
+    `var(--sc-chart-series-${(index % WEB.categoricalRungs) + 1})`;
 
   const describe = (bar: Bar): string => {
     const value = formatValue(bar.value, { locale });

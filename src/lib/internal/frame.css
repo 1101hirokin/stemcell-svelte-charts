@@ -1,7 +1,15 @@
 /* 図の外枠。名前・説明・凡例・軸の札・送れる領域・表を持つ。中の絵は各図が描く。
    姿の方針は「シャープでスリム」(裁定 2026-07-29): 線は髪の毛一本、面は塗らない、角は丸めない、
    札は小さく控える。 */
+/* 分類の色。トークンの参照はここに一箇所だけ置き、図は段を選ぶだけにする。
+   図が色を決めないという線(dataviz §3)を、参照の置き場所でも守る。 */
 .sc-chart {
+  --sc-chart-series-1: var(--color-dataviz-categorical-1);
+  --sc-chart-series-2: var(--color-dataviz-categorical-2);
+  --sc-chart-series-3: var(--color-dataviz-categorical-3);
+  --sc-chart-series-4: var(--color-dataviz-categorical-4);
+  --sc-chart-series-5: var(--color-dataviz-categorical-5);
+  --sc-chart-series-6: var(--color-dataviz-categorical-6);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-stack-sm);

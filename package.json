@@ -22,9 +22,10 @@
   "scripts": {
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "package": "svelte-package -i src/lib -o dist",
-    "test": "vitest run",
+    "test": "bun conformance/generate.ts && vitest run",
     "playground": "vite --config vite.playground.config.ts",
-    "prepublishOnly": "bun run package"
+    "prepublishOnly": "bun run package",
+    "conformance": "bun conformance/generate.ts && vitest run conformance"
   },
   "peerDependencies": {
     "svelte": "^5.0.0",

@@ -2,6 +2,8 @@
    角は丸めない: 長さで量を読む図で端をぼかすと読みが鈍る。 */
 .sc-bar {
   shape-rendering: crispEdges;
+  /* 指したときの応えは瞬間で切り替えない(motion.md の transition) */
+  transition: filter var(--motion-transition-duration) var(--motion-transition-easing);
 }
 .sc-bar:hover {
   /* 指したものは少しだけ沈める。色は系列のものなので、明るさで応える */
