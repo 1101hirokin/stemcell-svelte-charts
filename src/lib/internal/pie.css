@@ -23,20 +23,26 @@
   font-family: var(--typography-label-sm-font-family);
   font-size: var(--typography-label-sm-font-size);
 }
-/* 描き込みは扇が回って現れる(真上から時計回りに描かれる方向) */
-@keyframes sc-pie-appear {
+/* 描き込みは 0(真上)から時計回りに掃く(裁定 2026-07-29)。扇が並ぶ向きと同じ方向へ開く。
+   RTL では図ごと鏡にしているので、掃きも反時計回りになる。
+   角を動かすために @property で角度を登録する(登録しないと、custom property は補間されない)。
+   mask を解さない環境では、掃かずにそのまま出る(第7条)。 */
+@property --sc-sweep {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 360deg;
+}
+@keyframes sc-pie-sweep {
   from {
-    transform: rotate(-90deg);
-    opacity: 0;
+    --sc-sweep: 0deg;
   }
   to {
-    transform: rotate(0deg);
-    opacity: 1;
+    --sc-sweep: 360deg;
   }
 }
 .sc-pie-appear {
-  transform-origin: center;
-  animation: sc-pie-appear var(--motion-draw-duration) var(--motion-draw-easing);
+  mask-image: conic-gradient(#000 var(--sc-sweep), transparent 0);
+  animation: sc-pie-sweep var(--motion-draw-duration) var(--motion-draw-easing);
 }
 @media (prefers-reduced-motion: reduce) {
   .sc-pie-appear {

@@ -15,6 +15,7 @@
     type Row,
   } from '@stemcell/charts-core';
   import { tick } from 'svelte';
+  import { isRtl, observeDirection } from '../internal/direction';
 
   // 全体に対する取り分を角度で見る図(charts/PieChart.md)。軸を持たない唯一の図である。
   interface Props {
@@ -66,6 +67,16 @@
   let active = $state<PieSlice | null>(null);
   let plotEl: SVGSVGElement | undefined = $state();
 
+  // 読みの向き。RTL では円を鏡にする(扇が反時計回りに並び、描き込みも逆へ掃く)。
+  // 他の図で x を鏡にしているのと同じ理由で、読みの始まりを右側に置く
+  let rtl = $state(false);
+  $effect(() => {
+    void size.inline;
+    const read = () => (rtl = isRtl(plotEl));
+    read();
+    return observeDirection(plotEl, read);
+  });
+
   const layout = $derived(
     pieLayout({
       rows: data,
@@ -98,6 +109,9 @@
     const share = formatValue(slice.share, { locale, percent: true });
     return slice.name ? `${slice.name} ${value} ${share}` : `${value} ${share}`;
   };
+
+  /** RTL では図を鏡にするので、札の位置も鏡にする(文字そのものは反転させない)。 */
+  const mirrorPoint = (p: { x: number; y: number }) => (rtl ? { x: size.inline - p.x, y: p.y } : p);
 
   /** 扇の形。真上から時計回り(計算層が角を持ち、形はここで組む)。 */
   function slicePath(slice: PieSlice): string {
@@ -183,7 +197,12 @@
     bind:this={plotEl}
     onkeydown={handleKey}
   >
-    <g class="sc-pie" class:sc-pie-appear={animateOnAppear}>
+    <!-- 描き込みは 0(真上)から時計回りに掃く。RTL では図ごと鏡にするので、掃きも反時計回りになる -->
+    <g
+      class="sc-pie"
+      class:sc-pie-appear={animateOnAppear}
+      transform={rtl ? `translate(${size.inline} 0) scale(-1 1)` : undefined}
+    >
       {#each layout.slices as slice, index (slice.name ?? index)}
         {@const focused = cursor.point === index}
         <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
@@ -213,9 +232,9 @@
     <g class="sc-pie-labels" aria-hidden="true">
       {#each layout.slices as slice, index (slice.name ?? index)}
         {#if fitsLabel(slice) && slice.name}
-          {@const anchor = pointOnCircle(center, layout.radius, slice.middle)}
-          {@const at = pointOnCircle(center, slice.labelRadius, slice.middle)}
-          {@const right = Math.sin(slice.middle) >= 0}
+          {@const anchor = mirrorPoint(pointOnCircle(center, layout.radius, slice.middle))}
+          {@const at = mirrorPoint(pointOnCircle(center, slice.labelRadius, slice.middle))}
+          {@const right = at.x >= center.x}
           <line x1={anchor.x} y1={anchor.y} x2={at.x} y2={at.y} />
           <text x={at.x + (right ? 4 : -4)} y={at.y} text-anchor={right ? 'start' : 'end'} dominant-baseline="middle">
             {slice.name}
@@ -228,7 +247,7 @@
 
 {#snippet tooltipSnippet()}
   {#if active}
-    {@const at = pointOnCircle(center, layout.radius * 0.7, active.middle)}
+    {@const at = mirrorPoint(pointOnCircle(center, layout.radius * 0.7, active.middle))}
     <div class="sc-chart-tooltip" role="status" style={`--sc-x: ${at.x}px; --sc-y: ${at.y}px`}>
       {describe(active)}
     </div>

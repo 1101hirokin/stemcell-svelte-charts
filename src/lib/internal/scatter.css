@@ -16,14 +16,15 @@
 @keyframes sc-scatter-appear {
   from {
     opacity: 0;
-  }
-  to {
-    opacity: 1;
+    r: 0;
   }
 }
-/* 散布は「描く方向」を持たない(点に順序が無い)ので、現れ方は淡く出るだけにする */
+/* 描き込みは原点に近い点から現れる(裁定 2026-07-29)。点そのものに順序は無いが、
+   現れる順に「近いところから遠いところへ」という読みを与えられる。
+   遅れは描き込みの長さの半分までに収める(全体は draw の長さに収まる) */
 .sc-scatter-appear {
-  animation: sc-scatter-appear var(--motion-draw-duration) var(--motion-draw-easing);
+  animation: sc-scatter-appear calc(var(--motion-draw-duration) / 2) var(--motion-draw-easing) backwards;
+  animation-delay: calc(var(--motion-draw-duration) / 2 * var(--sc-delay, 0));
 }
 @media (prefers-reduced-motion: reduce) {
   .sc-scatter-appear {
