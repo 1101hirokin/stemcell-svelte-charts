@@ -39,6 +39,7 @@
     orientation === 'vertical' ? { x: category, y: value, color } : { y: category, x: value, color };
 </script>
 
+{#snippet redraw()}描き直す{/snippet}
 {#snippet orientationLabel()}向き{/snippet}
 {#snippet stackingLabel()}積み方{/snippet}
 {#snippet valueLabelsLabel()}値の札{/snippet}
@@ -312,7 +313,10 @@
   </Stack>
 
   <Stack gap="sm">
-    <Text variant="label-md" as="h2" muted>折れ線（時間の軸。欠測は空きになる）</Text>
+    <Cluster gap="md" align="center">
+      <Text variant="label-md" as="h2" muted>折れ線（時間の軸。欠測は空きになる）</Text>
+      <Button variant="text" size="sm" onclick={() => (take += 1)}>{@render redraw()}</Button>
+    </Cluster>
     {#key take}
       <LineChart
         ratio="16:9"
@@ -375,7 +379,10 @@
   </Stack>
 
   <Stack gap="sm">
-    <Text variant="label-md" as="h2" muted>面（既定は積む。ゼロ基線は省かない）</Text>
+    <Cluster gap="md" align="center">
+      <Text variant="label-md" as="h2" muted>面（既定は積む。ゼロ基線は省かない）</Text>
+      <Button variant="text" size="sm" onclick={() => (take += 1)}>{@render redraw()}</Button>
+    </Cluster>
     {#key take}
     <Switcher threshold="20rem" gap="lg">
       <Box>
@@ -410,7 +417,10 @@
   </Stack>
 
   <Stack gap="sm">
-    <Text variant="label-md" as="h2" muted>散布（大きさは面積。潰れたら薄く）</Text>
+    <Cluster gap="md" align="center">
+      <Text variant="label-md" as="h2" muted>散布（大きさは面積。潰れたら薄く）</Text>
+      <Button variant="text" size="sm" onclick={() => (take += 1)}>{@render redraw()}</Button>
+    </Cluster>
     {#key take}
       <ScatterChart
         ratio="16:9"
@@ -429,7 +439,10 @@
   </Stack>
 
   <Stack gap="sm">
-    <Text variant="label-md" as="h2" muted>円と輪（名前は外へ引き、入らない扇には出さない）</Text>
+    <Cluster gap="md" align="center">
+      <Text variant="label-md" as="h2" muted>円と輪（名前は外へ引き、入らない扇には出さない）</Text>
+      <Button variant="text" size="sm" onclick={() => (take += 1)}>{@render redraw()}</Button>
+    </Cluster>
     {#key take}
       <Switcher threshold="20rem" gap="lg">
         <Box>

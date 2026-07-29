@@ -188,6 +188,9 @@
 />
 
 {#snippet plot()}
+  <!-- 掃きは HTML の器に掛ける。SVG の g へ CSS の mask を当てても効かなかった(実測。
+       clip-path: inset() のときと同じ罠) -->
+  <div class="sc-pie-frame" class:sc-pie-appear={animateOnAppear}>
   <svg
     class="sc-chart-svg"
     width={size.inline}
@@ -198,11 +201,7 @@
     onkeydown={handleKey}
   >
     <!-- 描き込みは 0(真上)から時計回りに掃く。RTL では図ごと鏡にするので、掃きも反時計回りになる -->
-    <g
-      class="sc-pie"
-      class:sc-pie-appear={animateOnAppear}
-      transform={rtl ? `translate(${size.inline} 0) scale(-1 1)` : undefined}
-    >
+    <g class="sc-pie" transform={rtl ? `translate(${size.inline} 0) scale(-1 1)` : undefined}>
       {#each layout.slices as slice, index (slice.name ?? index)}
         {@const focused = cursor.point === index}
         <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
@@ -243,6 +242,7 @@
       {/each}
     </g>
   </svg>
+  </div>
 {/snippet}
 
 {#snippet tooltipSnippet()}

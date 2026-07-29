@@ -40,9 +40,20 @@
     --sc-sweep: 360deg;
   }
 }
+.sc-pie-frame {
+  block-size: 100%;
+  inline-size: 100%;
+}
 .sc-pie-appear {
   mask-image: conic-gradient(#000 var(--sc-sweep), transparent 0);
   animation: sc-pie-sweep var(--motion-draw-duration) var(--motion-draw-easing);
+}
+/* RTL では図ごと鏡にしているので、掃きも反時計回りになる(器ごと鏡にする) */
+.sc-chart:dir(rtl) .sc-pie-appear {
+  transform: scaleX(-1);
+}
+.sc-chart:dir(rtl) .sc-pie-appear > svg {
+  transform: scaleX(-1);
 }
 @media (prefers-reduced-motion: reduce) {
   .sc-pie-appear {

@@ -19,12 +19,10 @@
     r: 0;
   }
 }
-/* 描き込みは原点に近い点から現れる(裁定 2026-07-29)。点そのものに順序は無いが、
-   現れる順に「近いところから遠いところへ」という読みを与えられる。
-   遅れは描き込みの長さの半分までに収める(全体は draw の長さに収まる) */
+/* 描き込みは、それぞれの点がその場所でふくらむ(裁定 2026-07-29)。順番を付けない:
+   原点から順に現れる形は、点のあいだに無いかもしれない関係(相関や因果)を感じさせる */
 .sc-scatter-appear {
-  animation: sc-scatter-appear calc(var(--motion-draw-duration) / 2) var(--motion-draw-easing) backwards;
-  animation-delay: calc(var(--motion-draw-duration) / 2 * var(--sc-delay, 0));
+  animation: sc-scatter-appear var(--motion-draw-duration) var(--motion-draw-easing);
 }
 @media (prefers-reduced-motion: reduce) {
   .sc-scatter-appear {

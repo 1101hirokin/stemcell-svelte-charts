@@ -111,22 +111,6 @@
     return layout.xTicks.map((t, i) => ({ at: t.at, size: Math.max(width, 8), label: labels[i] ?? '' }));
   });
 
-  /**
-   * 描き込みの順。原点(0,0)に近い点から現れる(オーナー裁定 2026-07-29)。点そのものに順序は
-   * 無いが、現れる順には「近いところから遠いところへ」という読みを与えられる。
-   * 遅れは描き込みの長さに対する割合で持ち、実際の時間は CSS が掛ける。
-   */
-  const delays = $derived.by(() => {
-    const all = layout.series.flatMap((s) => s.points);
-    const ranked = [...all].sort(
-      (a, b) =>
-        Math.hypot(a.value.x, a.value.y) - Math.hypot(b.value.x, b.value.y),
-    );
-    const map = new Map<ScatterPoint, number>();
-    ranked.forEach((point, index) => map.set(point, ranked.length > 1 ? index / (ranked.length - 1) : 0));
-    return map;
-  });
-
   const empty = $derived(layout.series.every((s) => s.points.length === 0));
   const table = $derived(tableModel({ rows: data, encoding }));
 
@@ -228,7 +212,6 @@
           <circle
             class="sc-scatter-point"
             class:sc-scatter-appear={animateOnAppear}
-            style={animateOnAppear ? `--sc-delay: ${(delays.get(point) ?? 0).toFixed(3)}` : undefined}
             data-cursor={focused ? 'true' : undefined}
             cx={sx(point.x)}
             cy={sy(point.y)}
