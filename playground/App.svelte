@@ -310,18 +310,21 @@
 
   <Stack gap="sm">
     <Text variant="label-md" as="h2" muted>折れ線（時間の軸。欠測は空きになる）</Text>
-    <LineChart
-      ratio="16:9"
-      data={timeline}
-      encoding={{ x: '日', y: '件数', color: '区分' }}
-      scale={{ x: 'time' }}
-      legend
-      markers
-      label="日別の件数"
-      description="1月から5月まで。甲は3月、乙は4月が欠測。"
-      tableLabel="表で見る"
-      locale="ja-JP"
-    />
+    {#key take}
+      <LineChart
+        ratio="16:9"
+        animateOnAppear={animate}
+        data={timeline}
+        encoding={{ x: '日', y: '件数', color: '区分' }}
+        scale={{ x: 'time' }}
+        legend
+        markers
+        label="日別の件数"
+        description="1月から5月まで。甲は3月、乙は4月が欠測。"
+        tableLabel="表で見る"
+        locale="ja-JP"
+      />
+    {/key}
   </Stack>
 
   <Stack gap="sm">
@@ -370,10 +373,12 @@
 
   <Stack gap="sm">
     <Text variant="label-md" as="h2" muted>面（既定は積む。ゼロ基線は省かない）</Text>
+    {#key take}
     <Switcher threshold="20rem" gap="lg">
       <Box>
         <AreaChart
           ratio="4:3"
+          animateOnAppear={animate}
           data={timeline}
           encoding={{ x: '日', y: '件数', color: '区分' }}
           scale={{ x: 'time' }}
@@ -386,6 +391,7 @@
       <Box>
         <AreaChart
           ratio="4:3"
+          animateOnAppear={animate}
           data={timeline}
           encoding={{ x: '日', y: '件数', color: '区分' }}
           scale={{ x: 'time' }}
@@ -397,6 +403,7 @@
         />
       </Box>
     </Switcher>
+    {/key}
   </Stack>
 
   <Stack gap="sm">

@@ -26,22 +26,39 @@
   outline: var(--focus-ring-width) var(--focus-ring-style) var(--color-app-system);
   outline-offset: var(--focus-ring-offset);
 }
-/* 初回の描き込み。線は左から現れ、面は基線から立ち上がる。細かい制御は持たない */
-@keyframes sc-linearea-appear {
+/* 初回の描き込み。線が描かれる方向へ伸びる(棒のように下からせり上がる形は採らない)。
+   拭き取りの矩形を広げることで実現する: SVG の g へ CSS の clip-path: inset() を当てても
+   効かなかった(実測。Chromium)。 */
+@keyframes sc-linearea-wipe {
   from {
-    opacity: 0;
-    clip-path: inset(0 100% 0 0);
+    width: 0;
   }
   to {
-    opacity: 1;
-    clip-path: inset(0 0 0 0);
+    width: 100%;
   }
 }
-.sc-linearea-appear {
-  animation: sc-linearea-appear var(--motion-draw-duration) var(--motion-draw-easing);
+/* RTL は読みの始まりが右なので、右端から左へ拭く */
+@keyframes sc-linearea-wipe-rtl {
+  from {
+    x: 100%;
+    width: 0;
+  }
+  to {
+    x: 0;
+    width: 100%;
+  }
 }
+.sc-linearea-wipe {
+  width: 100%;
+  animation: sc-linearea-wipe var(--motion-draw-duration) var(--motion-draw-easing);
+}
+.sc-linearea-wipe[data-rtl='true'] {
+  animation-name: sc-linearea-wipe-rtl;
+}
+/* 動きは reduced-motion で止まる。値そのものは即座に正しい(motion.md §6) */
 @media (prefers-reduced-motion: reduce) {
-  .sc-linearea-appear {
+  .sc-linearea-wipe {
     animation: none;
+    width: 100%;
   }
 }

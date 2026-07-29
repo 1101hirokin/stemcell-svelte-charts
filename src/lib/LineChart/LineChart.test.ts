@@ -168,3 +168,24 @@ describe('AreaChart', () => {
     expect(screen.getByRole('cell', { name: '120' })).toBeTruthy();
   });
 });
+
+describe('描き込み', () => {
+  test('指定すると拭き取りの矩形が出る（線が伸びる動き。棒のように下からせり上がらない）', () => {
+    const { container } = render(LineChart, { props: { ...base, animateOnAppear: true } });
+    const wipe = container.querySelector('clipPath .sc-linearea-wipe');
+    expect(wipe).not.toBeNull();
+    const series = container.querySelector('.sc-linearea-series')!;
+    expect(series.getAttribute('clip-path')).toMatch(/^url\(#/);
+  });
+
+  test('指定しなければ拭き取らない', () => {
+    const { container } = render(LineChart, { props: base });
+    expect(container.querySelector('.sc-linearea-wipe')).toBeNull();
+    expect(container.querySelector('.sc-linearea-series')!.getAttribute('clip-path')).toBeNull();
+  });
+
+  test('面でも同じ動きを使う', () => {
+    const { container } = render(AreaChart, { props: { ...base, animateOnAppear: true } });
+    expect(container.querySelector('clipPath .sc-linearea-wipe')).not.toBeNull();
+  });
+});

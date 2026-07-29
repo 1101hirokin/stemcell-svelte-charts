@@ -17,6 +17,7 @@
     type Stacking,
   } from '@stemcell/charts-core';
   import { tick } from 'svelte';
+  import { isRtl, mirror, observeDirection } from './direction';
 
   // 折れ線と面の中身。二つの部品が同じ絵を描き、違うのは既定(積むか、ゼロ基線を含むか、塗るか)
   // だけなので、描く仕事はここが持つ(charts/LineChart.md / charts/AreaChart.md)。
@@ -77,6 +78,21 @@
   let cursor = $state<Cursor>({ series: 0, point: 0 });
   let active = $state<number | null>(null); // 指している列の順番
   let plotEl: SVGSVGElement | undefined = $state();
+  const uid = $props.id();
+  const wipeId = `${uid}-wipe`;
+
+  // 読みの向き。SVG の座標は物理なので、RTL では絵の x を鏡にして、札(論理プロパティで置く)と揃える
+  // 読みの向きは計算した値ではなく、環境に聞いて持つ。derived に置くと、要素が結ばれた後に
+  // 読み直されず false のままだった(実測)。効果で読み、場所の大きさが変わるたびに見直す
+  let rtl = $state(false);
+  $effect(() => {
+    void size.inline;
+    const read = () => (rtl = isRtl(plotEl));
+    read();
+    return observeDirection(plotEl, read);
+  });
+  /** 計算層の x を画面の x へ。RTL では鏡になる。 */
+  const sx = (x: number): number => mirror(x, size.inline, rtl);
 
   const xKind = $derived(scale?.x ?? 'linear');
   const layout = $derived(
@@ -118,13 +134,13 @@
   const sy = (y: number): number => size.block - y;
 
   const path = (points: LinePoint[]): string =>
-    points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(2)},${sy(p.y).toFixed(2)}`).join(' ');
+    points.map((p, i) => `${i === 0 ? 'M' : 'L'}${sx(p.x).toFixed(2)},${sy(p.y).toFixed(2)}`).join(' ');
 
   const areaPath = (points: LinePoint[]): string => {
-    const top = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(2)},${sy(p.y).toFixed(2)}`).join(' ');
+    const top = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${sx(p.x).toFixed(2)},${sy(p.y).toFixed(2)}`).join(' ');
     const bottom = [...points]
       .reverse()
-      .map((p) => `L${p.x.toFixed(2)},${sy(p.yBase).toFixed(2)}`)
+      .map((p) => `L${sx(p.x).toFixed(2)},${sy(p.yBase).toFixed(2)}`)
       .join(' ');
     return `${top} ${bottom} Z`;
   };
@@ -157,13 +173,13 @@
       .map((s) => s.points.find((p) => p.category === category))
       .filter((p): p is LinePoint => !!p);
     if (points.length === 0) return null;
-    return { category, points, x: points[0]!.x, y: Math.min(...points.map((p) => sy(p.y))) };
+    return { category, points, x: sx(points[0]!.x), y: Math.min(...points.map((p) => sy(p.y))) };
   });
 
   function handlePointer(event: PointerEvent) {
     if (!plotEl || layout.categories.length === 0) return;
     const box = plotEl.getBoundingClientRect();
-    const x = event.clientX - box.left;
+    const x = mirror(event.clientX - box.left, box.width, rtl);
     let best = 0;
     let bestDistance = Infinity;
     layout.categories.forEach((category, order) => {
@@ -248,6 +264,16 @@
     onpointermove={handlePointer}
     onpointerleave={() => (active = null)}
   >
+    {#if animateOnAppear}
+      <!-- 描き込みは「線が伸びる」動きである(棒のように下からせり上がるのは折れ線の動きではない)。
+           SVG の g へ CSS の clip-path: inset() を当てても効かなかった(実測)ので、拭き取り用の
+           矩形を動かす。RTL では読みの始まりが右なので、右から左へ拭く -->
+      <defs>
+        <clipPath id={wipeId}>
+          <rect class="sc-linearea-wipe" data-rtl={rtl ? 'true' : undefined} x="0" y="0" width="0" height="100%" />
+        </clipPath>
+      </defs>
+    {/if}
     <!-- グリッドは量の軸にだけ引く。枠では囲まない(dataviz §4-2) -->
     <g class="sc-chart-grid">
       {#each layout.ticks as t (t.value)}
@@ -262,7 +288,7 @@
     <g class="sc-chart-baseline"><line x1="0" x2={size.inline} y1={sy(layout.baseline)} y2={sy(layout.baseline)} /></g>
 
     {#each layout.series as s (s.series ?? s.seriesIndex)}
-      <g class="sc-linearea-series" class:sc-linearea-appear={animateOnAppear}>
+      <g class="sc-linearea-series" clip-path={animateOnAppear ? `url(#${wipeId})` : undefined}>
         {#if fill}
           {#each s.segments as segment, index (index)}
             {#if segment.length > 1}
@@ -291,7 +317,7 @@
             class="sc-linearea-point"
             data-visible={markers || point.isolated ? 'true' : undefined}
             data-cursor={focused ? 'true' : undefined}
-            cx={point.x}
+            cx={sx(point.x)}
             cy={sy(point.y)}
             r="4"
             fill={color(s.seriesIndex)}
