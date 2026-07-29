@@ -98,7 +98,7 @@
   position: relative;
   flex: none;
   inline-size: max-content;
-  padding-block-end: var(--sc-chart-x-strip, 1.25rem);
+  padding-block-end: var(--sc-chart-strip, 1.25rem);
   color: var(--color-app-fg-muted);
   font-family: var(--typography-label-sm-font-family);
   font-size: var(--typography-label-sm-font-size);
@@ -139,6 +139,9 @@
   block-size: 100%;
   inline-size: max(100%, var(--sc-across));
 }
+.sc-chart[data-orientation='vertical'] .sc-chart-track {
+  min-inline-size: 100%;
+}
 .sc-chart-plot {
   flex: 1;
   min-block-size: 0;
@@ -148,25 +151,76 @@
   display: block;
 }
 
-/* x 軸の札。帯の幅で切り詰める(斜めに倒さない、間引かない) */
-.sc-chart-x {
+/* もう一方の軸の札。帯の幅で切り詰める(斜めに倒さない、間引かない) */
+.sc-chart-categories {
   position: relative;
   flex: none;
-  block-size: 1.25rem;
   color: var(--color-app-fg-muted);
   font-family: var(--typography-label-sm-font-family);
   font-size: var(--typography-label-sm-font-size);
   line-height: 1.25rem;
   letter-spacing: var(--typography-label-sm-letter-spacing);
 }
-.sc-chart-x-label {
+.sc-chart-category {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sc-chart[data-orientation='vertical'] .sc-chart-categories {
+  block-size: 1.25rem;
+}
+.sc-chart[data-orientation='vertical'] .sc-chart-category {
   position: absolute;
   inset-inline-start: var(--sc-start);
   inline-size: var(--sc-size);
   text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+}
+/* 横棒: 名前は左の列に、量の札は下の帯に来る */
+.sc-chart[data-orientation='horizontal'] .sc-chart-frame {
+  flex-direction: column-reverse;
+}
+.sc-chart[data-orientation='horizontal'] .sc-chart-values {
+  inline-size: auto;
+  block-size: 1.25rem;
+  padding-block-end: 0;
+  padding-inline-start: var(--sc-chart-strip, 4rem);
+}
+.sc-chart[data-orientation='horizontal'] .sc-chart-value-gauge {
+  display: none;
+}
+.sc-chart[data-orientation='horizontal'] .sc-chart-value-label {
+  inset-inline-end: auto;
+  inset-block-start: 0;
+  /* 絶対配置は padding を跨がない。名前の列のぶんだけ、札も一緒にずらす */
+  inset-inline-start: calc(var(--sc-at) + var(--sc-chart-strip, 4rem));
+  transform: translateX(-50%);
+}
+.sc-chart[data-orientation='horizontal'] .sc-chart-value-label:first-of-type {
+  transform: none;
+}
+.sc-chart[data-orientation='horizontal'] .sc-chart-value-label:last-of-type {
+  transform: translateX(-100%);
+}
+.sc-chart[data-orientation='horizontal'] .sc-chart-track {
+  flex-direction: row-reverse;
+  inline-size: auto;
+  block-size: max(100%, var(--sc-across));
+}
+.sc-chart[data-orientation='horizontal'] .sc-chart-categories {
+  inline-size: 4rem;
+}
+.sc-chart[data-orientation='horizontal'] .sc-chart-category {
+  position: absolute;
+  inset-block-start: var(--sc-start);
+  block-size: var(--sc-size);
+  line-height: var(--sc-size);
+  inline-size: 100%;
+  padding-inline-end: var(--spacing-inline-sm);
+  text-align: end;
+}
+.sc-chart[data-orientation='horizontal'][data-scrolls='true'] .sc-chart-scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* 指したものの値。面は薄く、角は丸めず、線は一本 */

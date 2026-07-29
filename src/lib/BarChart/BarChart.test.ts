@@ -16,7 +16,7 @@ const base = {
   locale: 'ja-JP',
 };
 
-const bars = (container: HTMLElement) => [...container.querySelectorAll('.sc-barchart-bar')];
+const bars = (container: HTMLElement) => [...container.querySelectorAll('.sc-bar')];
 
 describe('BarChart', () => {
   test('図はまとまりで、名前を持つ', () => {
@@ -58,13 +58,13 @@ describe('BarChart', () => {
 
   test('凡例は既定で出ない(系列の数で自動的に切り替えない)', () => {
     const { container } = render(BarChart, { props: base });
-    expect(container.querySelector('.sc-barchart-legend')).toBeNull();
+    expect(container.querySelector('.sc-chart-legend')).toBeNull();
   });
 
   test('凡例を指定すると系列を切り替えられる。値はアプリが持つ', async () => {
     const onhiddenchange = vi.fn();
     const { container } = render(BarChart, { props: { ...base, legend: true, onhiddenchange } });
-    const buttons = container.querySelectorAll('.sc-barchart-legend-item');
+    const buttons = container.querySelectorAll('.sc-chart-legend-item');
     expect(buttons).toHaveLength(2);
     await fireEvent.click(buttons[1]!);
     expect(onhiddenchange).toHaveBeenCalledWith(['予算']);
@@ -122,21 +122,21 @@ describe('BarChart', () => {
 
   test('カテゴリの名前は出るが、切り詰めても全文が残る', () => {
     const { container } = render(BarChart, { props: base });
-    const label = container.querySelector('.sc-barchart-category')!;
+    const label = container.querySelector('.sc-chart-category')!;
     expect(label.textContent).toBe('1月');
     expect(label.getAttribute('title')).toBe('1月');
   });
 
   test('値のラベルは指定したときだけ出る', () => {
     const { container } = render(BarChart, { props: base });
-    expect(container.querySelector('.sc-barchart-value-marks')).toBeNull();
+    expect(container.querySelector('.sc-bar-values')).toBeNull();
     const { container: withLabels } = render(BarChart, { props: { ...base, valueLabels: true } });
-    expect(withLabels.querySelector('.sc-barchart-value-marks')).not.toBeNull();
+    expect(withLabels.querySelector('.sc-bar-values')).not.toBeNull();
   });
 
   test('データが空なら言葉を出す', () => {
     const { container } = render(BarChart, { props: { ...base, data: [], emptyLabel: 'データがありません' } });
-    expect(container.querySelector('.sc-barchart-empty')!.textContent).toBe('データがありません');
+    expect(container.querySelector('.sc-chart-empty')!.textContent).toBe('データがありません');
   });
 
   test('同じ棒に二つの行が来たら開発時に知らせる', () => {
@@ -150,7 +150,7 @@ describe('BarChart', () => {
 
   test('長い説明は読み上げへ渡す', () => {
     const { container } = render(BarChart, { props: { ...base, description: '1月から2月へ増えている' } });
-    const group = container.querySelector('.sc-barchart')!;
+    const group = container.querySelector('.sc-chart')!;
     const id = group.getAttribute('aria-describedby')!;
     expect(container.querySelector(`#${id}`)!.textContent).toBe('1月から2月へ増えている');
   });
