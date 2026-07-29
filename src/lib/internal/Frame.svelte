@@ -22,7 +22,7 @@
     color: (index: number) => string;
     /** 描くものが無いか。 */
     empty: boolean;
-    /** 縦横比(「16:9」)。 */
+    /** 縦横比。「横/縦」の整数比の文字列(16/9・1/1・4/3 等)。契約 Chart alpha.7 で Frame と揃えた。 */
     ratio?: string;
     /** 棒が伸びる向き。量の軸を縦に取るか横に取るか(BarChart だけが横を使う)。 */
     orientation?: 'vertical' | 'horizontal';
@@ -112,6 +112,19 @@
       cells: Object.fromEntries(table.columns.map((column, i) => [column, row[i] ?? null])),
     })),
   );
+  // 比の検証は @stemcell/svelte の Frame と同じ規則である(契約が同じ prop 名で同じ書式を要求する)。
+  // 以前ここはコロンを斜線へ置き換えていて、Frame は斜線でないと既定へ退避していた。同じ名前の
+  // prop に二つの書式が通る状態だったので、契約を斜線へ揃えて実装も合わせた(RFC 0025)。
+  const isRatio = (v: string): boolean => {
+    const m = /^\s*(\d+)\s*\/\s*(\d+)\s*$/.exec(v);
+    return m !== null && Number(m[1]) > 0 && Number(m[2]) > 0;
+  };
+  const ratioValue = $derived.by(() => {
+    if (!ratio) return undefined;
+    if (isRatio(ratio)) return ratio;
+    console.warn(`[stemcell] Chart: ratio="${ratio}" は「横/縦」の正の整数比ではない(契約)。比を無視して置かれた場所の高さに従う。`);
+    return undefined;
+  });
 </script>
 
 <!-- 図はまとまりであって、焦点を受けるのは中の点である(DropArea と同じ形。契約 a11y) -->
@@ -122,7 +135,7 @@
   aria-describedby={description ? descriptionId : undefined}
   data-orientation={orientation}
   data-scrolls={scrolls ? 'true' : undefined}
-  style={ratio ? `--sc-chart-ratio: ${ratio.replace(':', ' / ')}` : undefined}
+  style={ratioValue ? `--sc-chart-ratio: ${ratioValue}` : undefined}
 >
   <div class="sc-chart-label" id={labelId}>{label}</div>
   {#if description}

@@ -12,7 +12,7 @@
     /** 面の重ね方。既定は積む(重ねただけの面は互いを隠す)。 */
     stacking?: AreaChartStacking;
     markers?: boolean;
-    gaps?: 'break' | 'bridge';
+    missing?: 'break' | 'bridge';
     legend?: boolean;
     tooltip?: boolean;
     crosshair?: boolean;
@@ -31,7 +31,7 @@
   let {
     stacking = META.props.stacking.default,
     markers = META.props.markers.default,
-    gaps = META.props.gaps.default,
+    missing = META.props.missing.default,
     legend = META.props.legend.default,
     tooltip = META.props.tooltip.default,
     crosshair = META.props.crosshair.default,
@@ -44,7 +44,7 @@
   {...rest}
   {stacking}
   {markers}
-  {gaps}
+  {missing}
   {legend}
   {tooltip}
   {crosshair}

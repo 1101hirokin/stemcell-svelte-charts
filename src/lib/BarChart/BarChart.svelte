@@ -30,7 +30,7 @@
     /** 系列の重ね方。 */
     stacking?: BarChartStacking;
     /** 棒の先に値を出す。 */
-    valueLabels?: boolean;
+    dataLabels?: boolean;
     /** 凡例を出す。既定は出さない(系列の名前は印の近くに置く)。積み上げるときは指定する。 */
     legend?: boolean;
     /** 指したものの値を見せる。 */
@@ -64,7 +64,7 @@
     encoding,
     orientation = META.props.orientation.default,
     stacking = META.props.stacking.default,
-    valueLabels = META.props.valueLabels.default,
+    dataLabels = META.props.dataLabels.default,
     legend = META.props.legend.default,
     tooltip = META.props.tooltip.default,
     crosshair = META.props.crosshair.default,
@@ -321,7 +321,7 @@
       />
     {/each}
 
-    {#if valueLabels}
+    {#if dataLabels}
       <g class="sc-bar-values" aria-hidden="true">
         {#each layout.bars as bar (`${bar.category} ${bar.series ?? ''}`)}
           {@const box = rect(bar)}

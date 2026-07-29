@@ -27,7 +27,7 @@
     scale?: { x?: AxisKind };
     stacking?: Stacking | 'none';
     markers?: boolean;
-    gaps?: 'break' | 'bridge';
+    missing?: 'break' | 'bridge';
     legend?: boolean;
     tooltip?: boolean;
     crosshair?: boolean;
@@ -53,7 +53,7 @@
     scale,
     stacking = 'none',
     markers = false,
-    gaps = 'break',
+    missing = 'break',
     legend = false,
     tooltip = true,
     crosshair = false,
@@ -301,7 +301,7 @@
             <path class="sc-linearea-line" d={path(segment)} stroke={color(s.seriesIndex)} fill="none" />
           {/if}
         {/each}
-        {#if gaps === 'bridge'}
+        {#if missing === 'bridge'}
           <!-- 橋は必ず点線。実線にすると観測と非観測の区別が消える(LineChart.md §2) -->
           {#each s.bridges as bridge, index (index)}
             <path class="sc-linearea-bridge" d={path(bridge)} stroke={color(s.seriesIndex)} fill="none" />

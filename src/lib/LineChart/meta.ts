@@ -4,7 +4,7 @@ export const META = {
     // 線の上の点。既定は出さない(第3条の抑制)。孤立した点だけは指定が無くても出る
     markers: { default: false },
     // 値が無いところの扱い。break は切る、bridge は点線の橋を架ける(橋は必ず点線)
-    gaps: { values: ['break', 'bridge'], default: 'break' },
+    missing: { values: ['break', 'bridge'], default: 'break' },
     // 描くデータと対応づけ(既定値を持たない。契約 Chart)
     data: {},
     encoding: {},
@@ -23,4 +23,4 @@ export const META = {
   },
 } as const;
 
-export type LineChartGaps = (typeof META.props.gaps.values)[number];
+export type LineChartMissing = (typeof META.props.missing.values)[number];

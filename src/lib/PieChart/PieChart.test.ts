@@ -127,7 +127,7 @@ describe('Sparkline', () => {
 
   test('単位を渡せる(DS は文言を持たない)', () => {
     render(Sparkline, {
-      props: { data: rows, encoding: { x: '日', y: '値' }, label: '直近', valueLabel: '件', locale: 'ja-JP' },
+      props: { data: rows, encoding: { x: '日', y: '値' }, label: '直近', unit: '件', locale: 'ja-JP' },
     });
     expect(screen.getByRole('img').getAttribute('aria-label')).toContain('最大 9 件');
   });
