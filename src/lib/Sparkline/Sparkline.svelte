@@ -19,11 +19,11 @@
     /** 図の名前。読み上げの要約の頭に置く。 */
     label: string;
     /** 要約で値を言うときの単位や言い回し(「件」「円」)。DS は文言を持たない。 */
-    valueLabel?: string;
+    unit?: string;
     locale?: string;
   }
 
-  let { data, encoding, scale, label, valueLabel, locale }: Props = $props();
+  let { data, encoding, scale, label, unit, locale }: Props = $props();
 
   let size = $state({ inline: 0, block: 0 });
   let rootEl: HTMLElement | undefined = $state();
@@ -58,14 +58,15 @@
 
   // 表を持たない代わりに、形の要点を読み上げへ渡す(dataviz §4 の唯一の例外)
   const summary = $derived(summarize(data, encoding.y ?? ''));
-  const unit = $derived(valueLabel ? ` ${valueLabel}` : '');
+  /** 読み上げの中で数のうしろに付ける。単位が無ければ何も付けない。 */
+  const suffix = $derived(unit ? ` ${unit}` : '');
   const description = $derived(
     summary.count === 0
       ? label
       : `${label}: ${summary.count}、` +
-        `最小 ${formatValue(summary.min ?? 0, { locale })}${unit}、` +
-        `最大 ${formatValue(summary.max ?? 0, { locale })}${unit}、` +
-        `最後 ${formatValue(summary.last ?? 0, { locale })}${unit}`,
+        `最小 ${formatValue(summary.min ?? 0, { locale })}${suffix}、` +
+        `最大 ${formatValue(summary.max ?? 0, { locale })}${suffix}、` +
+        `最後 ${formatValue(summary.last ?? 0, { locale })}${suffix}`,
   );
 </script>
 

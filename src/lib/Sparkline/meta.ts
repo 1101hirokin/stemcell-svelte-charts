@@ -5,7 +5,7 @@ export const META = {
     encoding: {},
     scale: {},
     label: {},
-    valueLabel: {},
+    unit: {},
     locale: {},
   },
 } as const;

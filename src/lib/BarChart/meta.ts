@@ -6,7 +6,7 @@ export const META = {
     // 系列の重ね方
     stacking: { values: ['group', 'stacked', 'normalized'], default: 'group' },
     // 棒の先に値を出す。既定は出さない(第3条の抑制)
-    valueLabels: { default: false },
+    dataLabels: { default: false },
     // 描くデータと対応づけ(既定値を持たない。契約 Chart)
     data: {},
     encoding: {},

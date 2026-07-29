@@ -78,7 +78,7 @@ describe('LineChart', () => {
     const { container } = render(LineChart, {
       props: {
         ...base,
-        gaps: 'bridge' as const,
+        missingValues: 'bridge' as const,
         data: [{ 月: '1月', 件数: 1 }, { 月: '2月' }, { 月: '3月', 件数: 3 }],
         encoding: { x: '月', y: '件数' },
       },

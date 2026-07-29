@@ -131,7 +131,7 @@ describe('BarChart', () => {
   test('値のラベルは指定したときだけ出る', () => {
     const { container } = render(BarChart, { props: base });
     expect(container.querySelector('.sc-bar-values')).toBeNull();
-    const { container: withLabels } = render(BarChart, { props: { ...base, valueLabels: true } });
+    const { container: withLabels } = render(BarChart, { props: { ...base, dataLabels: true } });
     expect(withLabels.querySelector('.sc-bar-values')).not.toBeNull();
   });
 
@@ -159,5 +159,20 @@ describe('BarChart', () => {
   test('100% 積み上げでは割合も読み上げる', () => {
     const { container } = render(BarChart, { props: { ...base, stacking: 'normalized' as const } });
     expect(bars(container)[0]!.getAttribute('aria-label')).toBe('1月 実績 120 55%');
+  });
+
+  // 比の書式は Frame と同じ「横/縦」である(契約 Chart alpha.7。RFC 0025)。以前ここはコロンを
+  // 斜線へ置き換えていて、同じ prop 名に二つの書式が通っていた。
+  test('比は「横/縦」で受ける', () => {
+    const { container } = render(BarChart, { props: { ...base, ratio: '16/9' } });
+    expect(container.querySelector('.sc-chart')!.getAttribute('style')).toContain('--sc-chart-ratio: 16/9');
+  });
+
+  test('比が「横/縦」でなければ知らせて無視する', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const { container } = render(BarChart, { props: { ...base, ratio: '16:9' } });
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('「横/縦」の正の整数比ではない'));
+    expect(container.querySelector('.sc-chart')!.getAttribute('style')).toBeNull();
+    warn.mockRestore();
   });
 });
